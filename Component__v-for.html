@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<my-component v-for="item in items" :key='item.id'></my-component>
+		<!-- 在2.2.0+ 的版本里，的那个在组建中使用v-for时，key现在是必须的。 -->
+
+		<!-- 然而，任何数据都不会被自动传递到组件里，因为组件有自己独立的作用域。为了把迭代数据传递到组件里，我们要用props -->
+		
+	</div>
+
+	<script>
+		Vue.component('my-component', {
+				data: function () {
+					return {
+						count:0
+					}
+				},
+				template:'<button>aa</button>'
+			})
+
+		var vm = new Vue({
+			el:"#vue",
+			
+			data:{
+				items: [1,2,3,4,5]
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+
+	</script>
+</body>
+</html>

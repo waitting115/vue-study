@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<parent></parent>
+	</div>
+
+	<script>
+		//创建 孙子 模板
+		  var grendson = { 
+		    template:"<div>孙子</div>"
+		 }
+
+		//创建 儿子 模板
+		  var son= { 
+		    template:"<son>儿子<grendson >孙子</grendson ></son>"
+		    components:{
+		     grendson 
+		    }
+		 }
+
+		//创建 父亲 模板
+		  var parent = { 
+		    template:"<div>父亲<son></son></div>"
+		    components:{
+		     son
+		    }
+		 }
+		//实例化vm对象
+		  var vm = new Vue({
+		    el:"#vue",
+		    data:{
+		    },
+		    components:{
+		      parent
+		    }
+		})
+	</script>
+</body>
+</html>

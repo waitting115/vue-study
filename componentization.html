@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 所有的 Vue 组件都是 Vue 实例，并且接受相同的选项对象 (一些根实例特有的选项除外)。 -->
+
+	<!-- Object.freeze()，这会阻止修改现有的属性，也意味着响应系统无法再追踪变化。 -->
+
+	<!-- 不要在选项属性或回调上使用箭头函数，比如 created: () => console.log(this.a) 或 vm.$watch('a', newValue => this.myMethod())。因为箭头函数是和父级上下文绑定在一起的，this 不会是如你所预期的 Vue 实例，经常导致 Uncaught TypeError: Cannot read property of undefined 或 Uncaught TypeError: this.myMethod is not a function 之类的错误。 -->
+
+	<!-- 双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用 v-html 指令：
+
+<p>Using mustaches: {{ rawHtml }}</p>
+<p>Using v-html directive: <span v-html="rawHtml"></span></p> -->
+
+
+
+	<div id="vue">
+		<!-- 构建组件模板 -->
+		<!--现在我们为每个 todo-item 提供 todo 对象
+	      todo 对象是变量，即其内容可以是动态的。
+	      我们也需要为每个组件提供一个“key”，稍后再
+	      作详细解释。 -->
+		<ol>
+			<todo-item v-for='item in groceryList' v-bind:todo='item' v-bind:key='item.id'></todo-item>
+		</ol>
+	</div>
+
+	<script>
+		//注册组件
+		Vue.component('todo-item',{
+			//todo-item组件现在接受一个'prop',类似于一个自定义特性。这个prop名为todo。
+			props:['todo'],
+			template:'<li>{{todo.text}}</li>'
+		})
+
+		var app7 = new Vue({
+			el:"#vue",
+			data:{
+				groceryList: [
+					{ id:0, text:'蔬菜'},
+					{ id:1, text:'奶酪'},
+					{ id:2, text:'随便其他什么人吃的东西'}
+				]
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

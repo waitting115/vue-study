@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div :style="{ fontSize: postFontSize + 'em'}">
+			<blog-post
+				v-for='post in posts'
+				v-bind:key="post.id"
+				v-bind:post="post"
+				></blog-post>
+		</div>
+	</div>
+
+	<script>
+	//子组件中的data数据，不是通过父组件传递的，是子组件私有的，是可读可写的
+	//子组件中的所有props中的数据，嗾使通过父组件传递给子组件的，是只读的
+	//
+	//组件实例的作用于是孤立的，这意味着不能（也不应该）在子组件的模板内直接引用父组件的数据。父组件的数据需要通过prop才能下发到子组件中。
+	Vue.component('blog-post', {
+	  props: ['post'],
+	  template: `
+	    <div class="blog-post">
+	      <h3>{{ post.title }}</h3>
+	      <button>
+	        Enlarge text
+	      </button>
+	      <div v-html="post.content"></div>
+	    </div>
+	  `
+	})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				posts: [],
+				postFontSize: 1
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

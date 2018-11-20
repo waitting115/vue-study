@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<button v-on:click='counter ++'>counter</button>
+		<p>The button above has been clicked {{counter}} times.</p>
+
+		<!-- v-on可以接收一个需要调用的方法名称。 -->
+		<button v-on:click='greet'>Greet</button>
+		<br><br>
+
+		<!-- 除了直接绑定到一个方法，也可以在内联js语句中调用方法 -->
+		<button @click="say('hi')">Say hi</button>
+		<button @click="say('what')">Say what</button>
+		<br><br>
+
+		<!-- 有时也需要在内联语句处理器中访问原始的DOM事件。可以用特殊变量$event把它传入方法： -->
+		<button @click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				counter : 0,
+				name: 'Vue.js'
+			},
+			methods:{
+				greet: function (event) {
+					alert('Hello' + this.name + '!');
+					//event是原生DOM事件
+					if (event) {
+						alert(event.target.tagName)
+						//tagName属性返回的就是元素标签的大写名称。
+					}
+				},
+				say: function (message) {
+					alert(message);
+				},
+				warn: function (message, event) {
+					//现在我们可以访问原生事件对象
+					if(event) event.preventDefault()
+						// preventDefault()取消事件的默认动作，但是如果event对象的cancelable属性是false，那么没有默认动作，或者不能阻止默认动作，无论哪种情况，调用该方法都没有作用。
+					alert(message)
+				}
+			}
+		})
+
+		// 也可以用js直接调用方法
+		// vm.greet()
+	</script>
+</body>
+</html>

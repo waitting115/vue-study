@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<!-- Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做除了使 Vue 变得非常快之外，还有其它一些好处。例如，如果你允许用户在不同的登录方式之间切换： -->
+		<template v-if="boolean">
+			<label>UserName</label>
+			<input type="text" placeholder="Enter your username">
+		</template>
+		<template v-else>
+			<label>Email</label>
+			<input type="text" placeholder='Enter your email address'>
+		</template>
+		<button @click='boolean = !boolean'>aaa</button>
+		<br>
+
+		<!-- 这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来表达“这两个元素是完全独立的，不要复用它们”。只需添加一个具有唯一值的 key 属性即可： -->
+		<template v-if="booleana">
+			<label>UserName</label>
+			<input type="text" placeholder="Enter your username" key='username-input'>
+		</template>
+		<template v-else>
+			<label>Email</label>
+			<input type="text" placeholder='Enter your email address' key='email-input'>
+		</template>
+		<button @click='booleana = !booleana'>aaa</button>
+		<!-- 注意，<label> 元素仍然会被高效地复用，因为它们没有添加 key 属性。 -->
+
+
+
+
+
+
+	<!-- 当 Vue.js 用 v-for 正在更新已渲染过的元素列表时，它默认用“就地复用”策略。如果数据项的顺序被改变，Vue 将不会移动 DOM 元素来匹配数据项的顺序， 而是简单复用此处每个元素，并且确保它在特定索引下显示已被渲染过的每个元素。 -->
+
+	<!-- 为了给 Vue 一个提示，以便它能跟踪每个节点的身份，从而重用和重新排序现有元素，你需要为每项提供一个唯一 key 属性。理想的 key 值是每项都有的唯一 id。这个特殊的属性相当于 Vue 1.x 的 track-by ，但它的工作方式类似于一个属性，所以你需要用 v-bind 来绑定动态值 -->
+
+		<div v-for="item in items" :key="item.id">
+			<!-- 内容 -->
+			{{item}}
+		</div>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				boolean: true,
+				booleana: true,
+				items: [
+					1,
+					2,
+					3,
+					6
+				]
+			},
+			methods:{
+				// btnClick: function () {
+				// 	if(this.loginType == 'username') {
+				// 		this.loginType = 'Email'
+				// 	}else{
+				// 		this.loginType == 'username'
+				// 	}
+				// }
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

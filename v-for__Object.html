@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<ul id="v-for-object" class="demo">
+			<li v-for = 'value in object'>
+				{{value}}
+			</li>
+		</ul>
+
+		<!-- 也可以多个参数 -->
+		<ul>
+			<li v-for="(value, key, index) in object">
+				{{index}}. {{key}}. {{value}}
+				<!-- 属性值，键名，索引 -->
+			</li>
+		</ul>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				object: {
+					firstName: 'John',
+					lastName: 'Doe',
+					age: 30
+				}
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

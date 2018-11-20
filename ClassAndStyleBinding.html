@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div v-bind:class="{active: isActive}"></div>
+		<div class="static" v-bind:class="{active: isActive, 'text-danger':hasError}"></div>
+
+		<!-- 另一种方式(对象语法) -->
+		<div v-bind:class="classObject"></div>
+
+		<!-- 数组语法 -->
+		<div v-bind:class="[activeClass, errorClass]"></div>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				isActive:true,
+				hasError:false,
+				error: null,
+				activeClass: 'active',
+				errorClass: 'text-danver'
+			},
+			methods:{
+
+			},
+			computed:{
+				classObject: function () {
+					return {
+						active: this.isActive && !this.error,
+						'text-danger': this.error && this.error.type === 'fatal'
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<ul>
+			<template v-for="item in items">
+				<li>{{item.num}}</li>
+				<div>{{item.name}}</div>
+				<span>{{item}}</span>
+			</template>
+		</ul>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				items: [
+					{num: 1, name: 1212},
+					{num: 2, name: 1313},
+					{num: 3, name: 1414}
+				]
+			},
+			method:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

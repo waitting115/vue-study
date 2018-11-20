@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				userProfile: {
+					name: 'Anika'
+				}
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+
+		// 为一个对象添加一个新的属性
+		Vue.set(vm.userProfile, 'age', 20);
+
+		vm.$set(vm.userProfile, 'sex', '男');
+
+		console.log(vm.userProfile);
+
+		// 为一个已有对象添加多个新的属性。
+		Object.assign(vm.userProfile, {
+			agea: 12,
+			favoriteColor: 'Vue Green'
+		})
+	</script>
+</body>
+</html>

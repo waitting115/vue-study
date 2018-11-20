@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<form v-on:submit.prevent='addNewTodo'>
+			<!-- 提交时间不再重载页面 -->
+			<label for="new-todo">Add a todo</label>
+			<input
+				 v-model='newTodoText' 
+				 id="new-todo" 
+				 placeholder='E.g. Feed the cat'>
+			<!-- v-model本质上不过是语法糖，他负责监听用户输入事件以更新数据，并对一些极端场景进行一些特殊处理 -->
+
+			<!-- 语法糖，也翻译为糖衣语法，是由英国计算机科学家发明的一个术语，指计算机语言中天机的某种语法，这种语法对语言的功能并没有影响，但是更方便程序员使用。通常来说实用语法糖能够增加程序的可读性，从而减少程序代码出错的机会。 -->
+			<button>Add</button>
+		</form>
+		<ul>
+			<li 
+				is='todo-item' 
+				v-for='(todo, index) in todos' 
+				v-bind:key='todo.id'
+				v-bind:title='todo.title'
+				v-on:remove='todos.splice(index, 1)'
+			></li>
+			<!-- splice(必须-添加、删除项目的位置，必须-要删除的数量，可选-向数组添加的新项目)方法向数组中添加、删除项目，然后返回被删除的项目 -->
+		</ul>
+		
+	</div>
+
+	<script>
+		Vue.component('todo-item', {
+			template:'<li>{{ title }}<button v-on:click="$emit(\'remove\')">Remove</button></li>',
+			//当子组件执行了remove方法时，通过$emit这个方法去父组件中寻找remove这个让法，然后调用她，在父组件中执行remove。
+			props: ['title']
+		})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				newTodoText: '',
+				todos: [
+					{
+						id: 1,
+						title: 'Do the dishes'
+					},
+					{
+						id: 2,
+						title: 'Take out the trash'
+					},
+					{
+						id: 3,
+						title: 'Mow the lawn'
+					}
+				],
+				nextTodoId: 4
+			},
+			methods:{
+				addNewTodo: function () {
+					this.todos.push({
+						id: this.nextTodoId++,
+						title: this.newTodoText
+					})
+					this.newTodoText = ''
+				}
+			}
+		})
+	</script>
+</body>
+</html>

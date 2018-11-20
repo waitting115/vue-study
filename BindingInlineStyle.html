@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+		<!-- 对象语法 -->
+		<div v-bind:style="styleObject"></div>
+		<!-- 数组语法 -->
+		<div v-bind:style="[baseStyles, overridingStyles]"></div>
+
+		<!-- 多重值 -->
+		<div :style="{display:['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
+			这样只会渲染数组中最后一个被浏览器支持的值。在本例中，如果浏览器支持不带浏览器前缀的flexbox，那么就只会渲染 display: flex.
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data: {
+				activeColor: 'red',
+  				fontSize: 30,
+  				styleObject: {
+				    color: 'red',
+				    fontSize: '13px'
+			  },
+			  baseStyles:{},
+			  overridingStyles:{}
+			}
+		})
+	</script>
+</body>
+</html>
