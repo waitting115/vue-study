@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<input type="text" v-model='message' placeholder='edit me'>
+		<p>Message is : {{message}}</p>
+
+		<!-- 复选框 -->
+		<input type="checkbox" id="checkbox" v-model="checked">
+		<label for="checkbox">{{ checked }}</label>
+
+		<!-- 多个复选框，绑定到同一个数组： -->
+		<div id="example-3">
+			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+			<input type="checkbox" id="john" value="John" v-model="checkedNames">
+			<label for="john"> John </label>
+			<input type="checkbox" id="mike" value="mike" v-model="checkedNames"> 
+			<label for="mike"> Mike </label>
+			<br>
+			<span>Checked names: {{ checkedNames }}</span>
+		</div>
+
+		<!-- 单选按钮 -->
+		<div>
+			<input type="radio" id="one" value="One" v-model="picked">
+			<label for="one">One</label>
+			<input type="radio" id="two" value="Two" v-model="picked">
+			<label for="two"> Two</label>
+			<br>
+			<span>Picked: {{picked }}</span>
+		</div>
+
+		<!-- 选择框 -->
+		<div>
+			<select v-model="selected">
+				<!-- disabled 属性规定某个选项应该被禁用。被禁用的选项既不可用，也不可点击。 -->
+				<option value="" disabled>请选择</option>
+				<option>A</option>
+				<option>B</option>
+				<option>C</option>
+			</select>
+			<span>Selected: {{ selected }}</span>
+		</div>
+	</div>
+
+	<script>
+		//v-modal在表单元素上创建双向数据绑定。他会根据空间类型自动选取正确的方法来更新元素。
+		//v-modal会忽略所有表单元素的value、checked、selected特性的初始值而总是将Vue实例的数据作为数据来源。你应该通过js在组件的data选项中声明初始值。
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				message:'',
+				checked: 'false',
+				checkedNames: [],
+				picked: '',
+				selected: ''
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
