@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 在组件上使用v-model -->
+	<div id="vue">
+		<input type="text" v-model='searchText'>
+		<!-- 等价于 -->
+		<input
+			type="text"
+			v-bind:value='searchText'
+			v-on:input='searchText = $event.target.value'
+		>
+		<!-- 当用在组件上时，v-model则会这样 -->
+		<custom-input
+			v-bind:value = 'searchText'
+			v-on: input='searchText = $event'
+		></custom-input>
+		<!-- 为了让他正常工作，这个组件内的input必须将其value特性绑定到一个名叫value 的prop上，在其input事件被触发时，将新的值通过自定义的input事件抛出。写成代码是： -->
+
+		<custom-input v-model='searchText'></custom-input>
+
+		<!-- 有些html元素 诸如ul   ol  table 和select，对于哪些元素可以出现在其内部是有严格限制的。而有些元素，诸如li  tr  option，只能出现在其他某些特定的元素内部。 -->
+		<!-- 这会导致一些问题 -->
+		<!-- 这个特殊的is特性给了我们一个变通的办法。 -->
+	</div>
+
+	<script>
+		Vue.component('custom-input', {
+			props: ['value'],
+			template:`
+				<input
+					v-bind: value = 'value'
+					v-on:input = '$emit('input', $event.target.value)"
+				>
+			`
+		})
+
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				searchText: []
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

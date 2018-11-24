@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div id="vue">
-		<input type="text" v-model='message' placeholder='edit me'>
+		<input type="text" v-model.lazy='message' placeholder='edit me'>
 		<p>Message is : {{message}}</p>
 
 		<!-- 复选框 -->
@@ -47,6 +47,57 @@
 			</select>
 			<span>Selected: {{ selected }}</span>
 		</div>
+
+		<div>
+			<select v-model="selecteda" multiple>
+				<!-- disabled 属性规定某个选项应该被禁用。被禁用的选项既不可用，也不可点击。 -->
+				<option value="" disabled>请选择</option>
+				<option>A</option>
+				<option>B</option>
+				<option>C</option>
+			</select>
+			<span>Selecteda: {{ selecteda }}</span>
+		</div>
+
+		<!-- 用v-for渲染的动态选项： -->
+		<select v-model="selectedb" id="">
+			<option v-for='optionb in optionsb' :value='optionb.value'>
+				{{optionb.text}}
+			</option>
+		</select>
+		<span>Selectedb: {{selectedb}}</span>
+		<br>
+
+		<!-- 对于单选按钮，复选框及选择框的选项，v-model绑定的值通常是静态字符串（对于复选框也可以是布尔值） -->
+
+		<!-- 当选中时，‘picked’ 的值为字符串‘a’ -->
+		<input type="radio" id="danxuankuang" v-model='picked' value="aaa">
+		<label for="danxuankuang">单选框</label>
+		<br>
+		
+		<!-- ‘toggle’为true或false -->
+		<input type="checkbox" id="fuxuankuang" v-model='toggle'>
+		<label for="fuxuankuang">复选框</label>
+		<br>
+
+		<!-- 当选中第一个选项时，selected为 字符串‘abc' -->
+		<select v-model='selectedc' id="">
+			<option value="abc">ABC</option>
+		</select>
+
+		<!-- 但是有时候我们可能想把值绑定到Vue实例的一个动态属性上，这是可以用v-bind实现，并且这个属性的值可以不是字符串。 -->
+		<br>
+
+		<!-- v-model  修饰符： -->
+		<!-- .lazy 在默认情况下，v-model在每次input事件触发后将输入框的值与数据进行同步。你可以添加lazy修饰符，从而转变为使用change事件进行同步。 -->
+		<!-- 在’change‘时而非’input‘时更新 -->
+		<input v-model.lazy='msg'>
+
+		<!-- .number 自动将用户输入的值转为数字类型。 -->
+		<input type="number" v-model.number='age'>
+
+		<!-- .trim 自动过滤用户输入的首尾空白字符 -->
+		<input v-model.trim='msg'>
 	</div>
 
 	<script>
@@ -59,7 +110,19 @@
 				checked: 'false',
 				checkedNames: [],
 				picked: '',
-				selected: ''
+				selected: '',
+				selecteda: [],
+				selectedb: 'A',
+				optionsb: [
+					{text: 'One', value: 'A'},
+					{text: 'Two', value: 'B'},
+					{text: 'Three', value:'C'}
+				],
+				pickde: '',
+				toggle: '',
+				selectedc: '',
+				msg: '',
+				age: ''
 			},
 			methods:{
 
