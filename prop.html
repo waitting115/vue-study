@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		
+	</div>
+
+	<script>
+// 	HTML 中的特性名是大小写不敏感的，所以浏览器会把所有大写字符解释为小写字符。这意味着当你使用 DOM 中的模板时，camelCase (驼峰命名法) 的 prop 名需要使用其等价的 kebab-case (短横线分隔命名) 命名：
+
+// Vue.component('blog-post', {
+//   // 在 JavaScript 中是 camelCase 的
+//   props: ['postTitle'],
+//   template: '<h3>{{ postTitle }}</h3>'
+// })
+// <!-- 在 HTML 中是 kebab-case 的 -->
+// <blog-post post-title="hello!"></blog-post>
+// 重申一次，如果你使用字符串模板，那么这个限制就不存在了。
+// 
+// 传递静态或动态的Prop：
+// 1、传入一个数字
+// 2、传入一个数组
+// 3、传入一个对象
+// 4、传入一个对象的所有属性
+// 
+// 单向数据流
+// 		所有prop都使得其父子prop之间形成了一个单向下行绑定： 父级prop的更新会向下流动到子组件中，但反过来则不行。
+// 		额外的，每次服及组件发生更新时，子组件中的所有prop都会刷新为最新的值。这意味着你不应该在一个字组件内部改变prop。这样会发出警告。
+// 		
+// 	两种常见的试图改变一个prop的情形：
+// 		1、这个prop用来传递一个初始值：这个子组件接下来希望将其作为一个本地的prop数据来使用。在这种情况下，最好定义一个本地的data属性并将这个prop用作其初始值。
+// 			props: ['initialCounter'],
+// 			data : funciton () {
+// 				return {
+// 					counter: this.initialCounter
+// 				}
+// 			}
+// 			
+// 		2、这个prop以一种原始的值传入且需要进行转换。在这种情况下，最好使用这个prop 的值来定义一个计算属性：
+// 			props : ['size'],
+// 			conputed: {
+// 				normalizedSize: function (){
+// 					return this.size.trim().toLowerCase()
+// 				}
+// 			}
+// 			
+// 		注意在JavaScript中队形和数组是通过引用传入的，所以对于一个数组或对象类型的prop来说，在子组件中改变这个对象或数组本身将会影响到父组件的状态。
+// 		
+// 	prop验证：
+// 			我们可以为组件的prop指定验证要求。
+// 			为了定制prop的验证方式，你可以为props中的值提供一个带有验证需求的对象，而不是一个字符串数组。例如：
+// 				Vue.component('my-component',{
+// 					props: {
+// 						基础的类型检查
+// 						propA: Number,
+// 						多个可能的类型
+// 						propB: [String, Number],
+// 						必填的字符串
+// 						propC: {
+// 							type: String,
+// 							required:true
+// 						},
+// 						带有默认值的数字
+// 						propD:{
+// 							type: Number,
+// 							default: 100
+// 						},
+// 						带有默认值的对象
+// 						propE: {
+// 							type:Object,
+// 							对象或数组默认值必须从一个工厂函数获取
+// 							default: function () {
+// 								return { message: 'hello'}	
+// 							}
+// 						},
+// 						自定义验证函数
+// 						propF: {
+// 							validator: function (value) {
+// 								这个值必须匹配下列字符串中的一个
+// 								return ['success', 'warning', 'danger'].indexOf(value) !== -1
+// 							}
+// 						}
+// 					}
+// 				})
+// 				
+// 			当prop验证失败的时候，Vue将会产生一个控制台的警告。
+// 			
+// 			
+// 			
+// 	替换/合并已有的特性
+// 想象一下 <bootstrap-date-input> 的模板是这样的：
+
+// <input type="date" class="form-control">
+// 为了给我们的日期选择器插件定制一个主题，我们可能需要像这样添加一个特别的类名：
+
+// <bootstrap-date-input
+//   data-date-picker="activated"
+//   class="date-picker-theme-dark"
+// ></bootstrap-date-input>
+// 在这种情况下，我们定义了两个不同的 class 的值：
+
+// form-control，这是在组件的模板内设置好的
+// date-picker-theme-dark，这是从组件的父级传入的
+// 对于绝大多数特性来说，从外部提供给组件的值会替换掉组件内部设置好的值。所以如果传入 type="text" 就会替换掉 type="date" 并把它破坏！庆幸的是，class 和 style 特性会稍微智能一些，即两边的值会被合并起来，从而得到最终的值：form-control date-picker-theme-dark。
+// 
+// 
+// 禁用特性继承：
+// 	如果你不洗碗组件的根元素集成特性，你可以在组建的选项行中设置 interitAttrs:false
+// 	
+// 	
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
