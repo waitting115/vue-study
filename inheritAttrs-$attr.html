@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>
+			引用官方解释：
+				ingeritAttrs：默认值true，在这种情况下父作用域的不被认作props的特性绑定（attribute bindings）将会“回退”且作为普通的HTML特性应用于崽子组件的根元素上.
+				$attr:包含了父作用域中不作为prop被识别（且获取）的特性绑定（class和style除外）。
+		</p>
+
+		<!-- 使用一 -->
+		<custom-input
+		 :value='customInputText'
+		 @input='customInputText = $event'
+		></custom-input>
+		<!-- 在这种情况下，子组件的console.log(this.$attrs);代码结果是： Object{} -->
+
+		<!-- 使用二 -->
+		<custom-input
+		 :value='customInputText'
+		 @input='customInputText = $event'
+		 :a = "a"//增加此处代码
+		 ></custom-input>
+		 在这种情况下，子组件的代码结果是：Object{a：'1'}，且子组件根元素上出现：a='1'属性
+
+		 <p>
+		 	当在子组件中啊计入inheritAttrs：false时a属性就不会自动加到根元素上了。
+
+		 	总之一句话：$attrs存储非prop特性，inheritAttrs控制vue对非prop特性默认行为。
+		 </p>
+	</div>
+
+	<script>
+		//自定义子组件：
+			Vue.component('custom-input', {
+				props: ['value'],
+				template:`
+					<input
+					v-bind:value='value'
+					v-on:input="$emit('input', $event.target.value)"
+					>
+				`,
+				//v-bind:value='value'--将props里面的value值赋值给组件的value属性。
+				//$event.target.value--获取当前文本框的值
+				mounted: function () {
+					console.log(this.$attrs);
+				}
+				//钩子函数其一：组件挂载后，此方法执行后，页面显示
+			})
+
+
+
+			//父组件
+			const app = new Vue({
+				el: '#vue',
+				data: {
+					customInputText: "customInputText-value",
+					a: '1'
+				}
+
+			})
+	</script>
+</body>
+</html>
