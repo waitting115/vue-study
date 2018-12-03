@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 例如：子组件 -->
+	<template>
+		<div class="train-city">
+			<h3>父组件传给子组件的toCity：{{sendData}}</h3>
+			<br>
+			<button @click='select(‘大连’)'>点击此处将‘大连’发射给父组件</button>
+		</div>
+	</template>
+	<script>
+		export default {
+			name: 'trainCity',
+			props: ['sendData'],//用来接收父组件传给子组件的数据
+			methods: {
+				select(val) {
+					let data = {
+						cityname: val
+					};
+					this.$emit('showCityName', data);//select事件出发后，自动触发showCityName事件
+				}
+			}
+		}
+	</script>
+
+	<!--父组件-->
+	<template>
+		<div>
+			<div>父组件的toCity{{toCity}}</div>
+			<train-city @showCityName="updateCity" :sendDate="toCity"></train-city>
+		</div>
+	</template>
+	<script>
+		import TrainCity from "./train-city";
+		export default {
+			name: 'index',
+			components: {TrainCity},
+			data() {
+				return {
+					toCity: "北京"
+				}
+			},
+			methods: {
+				updateCity(data) {//触发子组件城市选择-选择城市的事件
+					this.toCity = data.cityname;//改变了父组件的值
+					console.log('toCity:' + this.toCity)
+				}
+			}
+		}
+	</script>
+
+
+	<div id="vue">
+		
+	</div>
+
+	<script>
+	//1、父组件可以使用props把数据传给子组件。
+	//2、子组件可以使用$emit出发父组件的自定义事件。
+	//
+	//vm.$emit(event, arg)//触发当前实例上的事件
+	//vm.$on(event, fn);监听event事件后运行fn
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+
+
+	<!-- 在使用Vue 的组件的时候常常需要:    子组件  向父组件  传递   事件  以及  携带数据data,
+
+父组件 监听到来自子组件的事件 以及传递过来的 数据,   使用这些数据做相应的事情 ........
+
+一个Demo 就一目了然, 这里做个记录: -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>render</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+ 
+<div id="example">
+    <my-button     @message="handleMessage">   </my-button>
+</div>
+ 
+<script>
+ 
+    Vue.component('my-button', {
+        template: `<div>   <button @click="doSend"> Send  </button>  </div>`,
+        methods: {
+            doSend() {
+                this.$emit('message', '第一个参数', '第二个参数');
+            }
+        }
+    });
+ 
+    new Vue({
+        el: '#example',
+        data: {
+            messages: []
+        },
+        methods: {
+            handleMessage(p1, p2) {
+                console.log( p1 );  //'第一个参数'
+                console.log( p2 );  // '第二个参数' ,... 后续可以传递多个参数;
+            }
+        }
+    });
+ 
+</script>
+</body>
+</html> -->
+</body>
+</html>
