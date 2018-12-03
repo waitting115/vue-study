@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>
+			v-model：可以在input类型元素上进行双向绑定。但v-model本质上不过是语法糖。它负责监听用户的输入事件以及更新数据，并对一些极端场景进行一些特殊处理。
+		</p>
+		<p>
+			v-model会忽略所有表单元素的value、checked、selected特性的初始值，而总是将Vue实例的数据作为数据来源。你应该通过js在组件的data现象中声明初始值。
+		</p>
+		<input type="text" v-model='message'>
+		<p>The input value is : {{message}}</p>
+
+		<p>
+			实际上，由于v-model只是语法糖，<input v-model='message'>与下面的两行代码是一致的：
+			<input type="text" v-bind:value='message' v-on:input='message = $event.target.value'>
+			<input type="text" :value='message' @input='message = $event.target.value'>
+		</p>
+
+		<p>
+			v-bind：它的后面加冒号
+			<p v-bind:class='someclass'></p>
+			如果不加v-bind那么someclass就是个常量，没有任何动态数据参与。当加上v-bind之后，它的值someclass不是字符串，而是vue实例对应的data.someclass这个变量。
+			<br>
+			var app = Vue({
+				el: '#app',
+				template: '<img :src="remoteimgurl">',
+				data: {
+					src: ''
+				},
+				beforeMount() {
+					fetch(...).then(...).then(...).then(res => this.src = res.remoteimgurl) 
+				}
+			})
+			<br>
+			上面这段代码中，默认情况下data.src是空字符串，也就是说不会有图片显示出来，到那时当从远端获取到图片地址之后，更新了data.src，图片就会显示出来了。
+		</p>
+
+		<p>
+			v-bind and v-model区别
+			有一些情况我们需要v-bind和v-model一起使用：
+			<input :value='name' v-model='body'>
+			data.name 和 data.body，到底谁跟着谁变呢？甚至，它们会不会产生冲突呢？
+			实际上它们的关系和上面的阐述是一样的，v-bind产生的效果不含有双向绑定，所以：value的效果就是让input的value属性值等于data.name的值，而v-model的效果是使input和data.body建立双向绑定，因此首先data.body的值会给input的value属性，其次，当input中输入的值发生变化的时候，data.body还会跟着改变。
+		</p>
+
+		<p>
+			上文提到过下面两句是等价的：
+			<input type="text" v-model='message'>
+			<input type="text" :value='message' @input="message = $event.target.value">
+		</p>
+		<p>
+			那么，v-model其实就是v-bind和b-on的语法糖。
+		</p>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				message: 'Hello Word'
+
+			}
+		})
+	</script>
+</body>
+</html>
