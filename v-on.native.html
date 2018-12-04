@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>
+			笔记：
+				用于在某个组件的根元素上监听一个原生事件。但对于普通的HTML标签是不起作用的。
+		</p>
+
+		<!-- 普通的HTML标签 -->
+		<a href="#" @click.native = 'clickFun'>Chick me</a>
+		<br>
+
+		<!-- 组件 -->
+		<my-component @click.native = 'clickFun'></my-component>
+		<br>
+
+		<!-- 普通的HTML标签 -->
+		<a href="#" @click = 'clickFun'>Chick me</a>
+		<br>
+
+		<p>
+			自我理解：
+				在子组件中需要用根元素上的方法来用到子组件本身的原生事件，要用v-on的.native修饰符。
+				自定义组件也是不能直接用click的，需要在事件后写上.native才有效。
+				反正，当你给一个vue组件绑定事件的时候，要加上.native！
+		</p>
+	</div>
+
+	<script>
+		Vue.component('my-component', {
+			template:`<a href="#" >Click me</a>`
+		})
+
+		//根元素
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+
+			},
+			methods:{
+				clickFun: function () {
+					console.log('message: success')
+				}
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
