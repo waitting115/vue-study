@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>
+			在有些情况下，我们可能需要对一个 prop 进行“双向绑定”。不幸的是，真正的双向绑定会带来维护上的问题，因为子组件可以修改父组件，且在父组件和子组件都没有明显的改动来源。
+		</p>
+
+		<p>
+			sync 修饰符
+这个家伙在 vue@1.x 的时候曾作为双向绑定功能存在，即子组件可以修改父组件中的值。因为它违反了单向数据流的设计理念，所以在 vue@2.0 的时候被干掉了。但是在 vue@2.3.0+ 以上版本又重新引入了这个 .sync 修饰符。但是这次它只是作为一个编译时的语法糖存在。它会被扩展为一个自动更新父组件属性的 v-on 监听器。说白了就是让我们手动进行更新父组件中的值了，从而使数据改动来源更加的明显。下面引入自官方的一段话：
+
+在有些情况下，我们可能需要对一个 prop 进行“双向绑定”。不幸的是，真正的双向绑定会带来维护上的问题，因为子组件可以修改父组件，且在父组件和子组件都没有明显的改动来源。
+
+既然作为一个语法糖，肯定是某种写法的简写形式，哪种写法呢，看代码：
+
+<text-document
+  v-bind:title="doc.title"
+  v-on:update:title="doc.title = $event">
+</text-document>
+于是我们可以用 .sync 语法糖简写成如下形式：
+
+<text-document v-bind:title.sync="doc.title"></text-document>
+废话这么多，如何做到“双向绑定” 呢？让我们进段广告，广告之后更加精彩！ ... 好的，欢迎回来。假如我们想实现这样一个效果：改变子组件文本框中的值同时改变父组件中的值。怎么做？列位不妨先想想。先看段代码：
+let Login = Vue.extend({
+  template: `
+    <div class="input-group">
+      <label>姓名:</label>
+      <input v-model="text">
+    </div>
+  `,
+  props: ['name'],
+  data () {
+    return {
+      text: ''
+    }
+  },
+  watch: {
+    text (newVal) {
+      this.$emit('update:name', newVal)
+    }
+  }
+})
+ 
+new Vue({
+  el: '#app',
+  data: {
+    userName: ''
+  },
+  components: {
+    Login
+  }
+})
+下面划重点，代码里有这一句话：
+this.$emit('update:name', newVal)
+官方语法是：update:myPropName 其中 myPropName 表示要更新的 prop 值。当然如果你不用 .sync 语法糖使用上面的 .$emit 也能达到同样的效果。仅此而已！
+		</p>
+		<p>在网页中显示的版本
+			<!-- sync 修饰符 <br>
+这个家伙在 vue@1.x 的时候曾作为双向绑定功能存在，即子组件可以修改父组件中的值。因为它违反了单向数据流的设计理念，所以在 vue@2.0 的时候被干掉了。但是在 vue@2.3.0+ 以上版本又重新引入了这个 .sync 修饰符。但是这次它只是作为一个编译时的语法糖存在。它会被扩展为一个自动更新父组件属性的 v-on 监听器。说白了就是让我们手动进行更新父组件中的值了，从而使数据改动来源更加的明显。下面引入自官方的一段话：<br>
+
+在有些情况下，我们可能需要对一个 prop 进行“双向绑定”。不幸的是，真正的双向绑定会带来维护上的问题，因为子组件可以修改父组件，且在父组件和子组件都没有明显的改动来源。<br>
+
+既然作为一个语法糖，肯定是某种写法的简写形式，哪种写法呢，看代码：<br>
+&lt;text-document<br>
+  v-bind:title="doc.title"<br>
+  v-on:update:title="doc.title = $event"&gt;<br>
+&lt;/text-document&gt;<br>
+于是我们可以用 .sync 语法糖简写成如下形式：<br>
+<br>
+&lt;text-document v-bind:title.sync="doc.title"&gt;&lt;/text-document&gt;<br>
+废话这么多，如何做到“双向绑定” 呢？让我们进段广告，广告之后更加精彩！ ... 好的，欢迎回来。假如我们想实现这样一个效果：改变子组件文本框中的值同时改变父组件中的值。怎么做？列位不妨先想想。先看段代码：<br>
+let Login = Vue.extend({<br>
+  template: `<br>
+    &lt;div class="input-group"&gt;<br>
+      &lt;label&gt;姓名:&lt;/label&gt;<br>
+      &lt;input v-model="text"&gt;<br>
+    &lt;/div&gt;<br>
+  `,<br>
+  props: ['name'],<br>
+  data () {<br>
+    return {<br>
+      text: ''<br>
+    }<br>
+  },<br>
+  watch: {<br>
+    text (newVal) {<br>
+      this.$emit('update:name', newVal)<br>
+    }<br>
+  }<br>
+})<br>
+ 
+new Vue({<br>
+  el: '#app',<br>
+  data: {<br>
+    userName: ''<br>
+  },<br>
+  components: {<br>
+    Login<br>
+  }<br>
+})<br>
+下面划重点，代码里有这一句话：<br>
+
+this.$emit('update:name', newVal)<br>
+官方语法是：update:myPropName 其中 myPropName 表示要更新的 prop 值。当然如果你不用 .sync 语法糖使用上面的 .$emit 也能达到同样的效果。仅此而已！<br> -->
+		</p>
+	</div>
+
+
+
+
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
