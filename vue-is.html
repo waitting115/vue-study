@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>
+			vue中is的属性引入是为了解决dom结构中对放入html 的元素有限制问题，比如ul里面要街上li的标签，这就导致在ul里面用component等插件会导致出错。
+			引入is属性后，你完全可以写成这样：
+
+		</p>
+		<ul>
+			<li is='component'></li>
+		</ul>
+		
+		<!-- 和下面的代码是一样的效果 -->
+		<!-- <ul> -->
+			<!-- <component></component> -->
+		<!-- </ul> -->
+
+	</div>
+
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: 
+		})
+	</script>
+</body>
+</html>
