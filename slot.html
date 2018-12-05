@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<!-- <navigation-link url='/profile'>
+			Your Profile
+		</navigation-link> -->
+
+		<div class="container">
+			<header>
+				我们希望把页头放在这里
+			</header>
+			<main>
+				我们希望把主要内容放在这里
+			</main>
+			<footer>
+				我们希望把页脚放这里
+			</footer>
+		</div>
+		<!-- 这样情况我们用name特性，这个特性可以用来定义外的插槽 -->
+		
+		
+		<!-- 在向具名插槽提供内容的时候，我们可以在一个父组件的<template></template>元素上使用slot特性： -->
+		<base-layout>
+			<template slot='header'>
+				<h1>Here might be a page title</h1>
+			</template>
+
+			<p>A paragraph for the main content.</p>
+			<p>And anotner one.</p>
+
+			<template slot='footer'>
+				<p>Here's some contact info</p>
+			</template>
+		</base-layout>
+		<!-- 另一种slot特性的用法是直接用在一个普通的元素上 -->
+		<base-layout>
+			<h1 slot='header'>Here might be a page title</h1>
+
+			<p>A paragraph for the main content.</p>
+			<p>And another one.</p>
+
+			<p slot='footer'>Here's some contact info</p>
+		</base-layout>
+		<!-- 我们还是可以保留一个未命名插槽，这个插槽是默认插槽，也就是说它会作为所有未匹配到插槽的内容的统一出口。上述两个实例渲染出来的HTML都将会是 -->
+
+		<div class="container">
+		  <header>
+		    <h1>Here might be a page title</h1>
+		  </header>
+		  <main>
+		    <p>A paragraph for the main content.</p>
+		    <p>And another one.</p>
+		  </main>
+		  <footer>
+		    <p>Here's some contact info</p>
+		  </footer>
+		</div>
+
+
+		<!-- 插槽的默认内容 -->
+		<!-- <button type="submit"> -->
+			<!-- <slot>Submit</slot> -->
+		<!-- </button> -->
+		<!-- 如果父组件为这个插槽提供呢内容，则默认的内容会被替换掉 -->
+
+
+
+		<!-- 编译作用域 -->
+		<!-- 当你想在差早内使用数据时，例如： -->
+		<!-- <navigation-link url='/profile'> -->
+			<!-- Logged in as {{user.name}} -->
+		<!-- </navigation-link> -->
+
+		<!-- 该插槽可以访问跟这个模板的其它地方相同的实例属性（也就是说作用域是相同的）。但这个插槽不能访问<navigation-link>的作用域。例如尝试访问url是不会工作的，牢记一条准则： -->
+			<!-- 父组件模板的所有东西都会在父级作用域内编译；子组件模板的所有东西都会在子级作用域内编译。 -->
+
+
+
+		<!-- 作用域插槽 -->
+		<!-- 有的时候你希望提供的组件带有一个可从子组件获取数据的可复用的插槽。例如一个简单的 <todo-list> 组件的模板可能包含了如下代码：
+
+		<ul>
+		  <li
+		    v-for="todo in todos"
+		    v-bind:key="todo.id"
+		  >
+		    {{ todo.text }}
+		  </li>
+		</ul>
+		但是在我们应用的某些部分，我们希望每个独立的待办项渲染出和 todo.text 不太一样的东西。这也是作用域插槽的用武之地。
+
+		为了让这个特性成为可能，你需要做的全部事情就是将待办项内容包裹在一个 <slot> 元素上，然后将所有和其上下文相关的数据传递给这个插槽：在这个例子中，这个数据是 todo 对象：
+
+		<ul>
+		  <li
+		    v-for="todo in todos"
+		    v-bind:key="todo.id"
+		  > -->
+		    <!-- 我们为每个 todo 准备了一个插槽，-->
+		    <!-- 将 `todo` 对象作为一个插槽的 prop 传入。-->
+		    <!-- <slot v-bind:todo="todo"> -->
+		      <!-- 回退的内容 -->
+		     <!--  {{ todo.text }}
+		    </slot>
+		  </li>
+		</ul>
+		现在当我们使用 <todo-list> 组件的时候，我们可以选择为待办项定义一个不一样的 <template> 作为替代方案，并且可以通过 slot-scope 特性从子组件获取数据：
+
+		<todo-list v-bind:todos="todos"> -->
+		  <!-- 将 `slotProps` 定义为插槽作用域的名字 -->
+		  <!-- <template slot-scope="slotProps"> -->
+		    <!-- 为待办项自定义一个模板，-->
+		    <!-- 通过 `slotProps` 定制每个待办项。-->
+		    <!-- <span v-if="slotProps.todo.isComplete">✓</span> -->
+		    <!-- {{ slotProps.todo.text }} -->
+		  <!-- </template> -->
+		<!-- </todo-list> -->
+			
+		<!-- 在 2.5.0+，slot-scope 不再限制在 <template> 元素上使用，而可以用在插槽内的任何元素或组件上。 -->
+
+
+		<!-- 解构 slot-scope
+		如果一个 JavaScript 表达式在一个函数定义的参数位置有效，那么这个表达式实际上就可以被 slot-scope 接受。也就是说你可以在支持的环境下 (单文件组件或现代浏览器)，在这些表达式中使用 ES2015 解构语法。例如：
+
+		<todo-list v-bind:todos="todos">
+		  <template slot-scope="{ todo }">
+		    <span v-if="todo.isComplete">✓</span>
+		    {{ todo.text }}
+		  </template>
+		</todo-list>
+		这会使作用域插槽变得更干净一些。 -->
+
+
+
+	</div>
+
+	<script>
+		// <solt>元素作为承载分发内容的出口
+		// 当组件渲染的时候，这个<slot>元素将会被替换为“Your Profile”。插槽内可以包含任何模板代码，包括HTML，甚至其它的组件。
+		// 如果<navigation-link>没有包含一个<slot>元素，则任何传入它的内容都会被抛弃。
+		// 
+		// 具名插槽
+		// 有些时候我们需要多个插槽。例如：
+
+		Vue.component('base-layout', {
+			template:`
+				<div class="container">
+					<header>
+						<slot name='header'></slot>
+					</header>
+					<main>
+						<slot></slot>
+					</main>
+					<footer>
+						<slot name='footer'></slot>
+					</footer>
+				</div>
+			`
+		})
+
+		Vue.component('navigation-link', {
+			template:`
+				<a
+				 :href='url'
+				 class='nav-link'
+				>
+				 <slot></slot>
+				</a>
+			`
+		})
+
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				// /profile: ''
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
