@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+	<transition
+	  v-on:before-enter="beforeEnter"
+	  v-on:enter="enter"
+	  v-on:after-enter="afterEnter"
+	  v-on:enter-cancelled="enterCancelled"
+
+	  v-on:before-leave="beforeLeave"
+	  v-on:leave="leave"
+	  v-on:after-leave="afterLeave"
+	  v-on:leave-cancelled="leaveCancelled"
+	>
+  		<!-- ... -->
+	</transition>
+	</div>
+
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				
+			},
+			methods: {
+				//进入中
+
+				beforeEnter: function (el) {
+					//...
+				},
+				//当与css结合使用时，回调函数done时可选的
+				enter: function (el, done) {
+					//...
+					done()
+				},
+				afterEnter: function (el) {
+					//...
+				},
+				enterCancelled: function (el) {
+					//...
+				},
+				// --------
+				  // 离开时
+				  // --------
+
+				  beforeLeave: function (el) {
+				    // ...
+				  },
+				  // 当与 CSS 结合使用时
+				  // 回调函数 done 是可选的
+				  leave: function (el, done) {
+				    // ...
+				    done()
+				  },
+				  afterLeave: function (el) {
+				    // ...
+				  },
+				  // leaveCancelled 只用于 v-show 中
+				  leaveCancelled: function (el) {
+				    // ...
+				  }
+			}
+		})
+
+		// 这些钩子函数可以结合css transitions/animations是一个，也可以单独使用。
+	</script>
+</body>
+</html>
