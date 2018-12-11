@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<style>
+		.slide-fade-enter-active {
+			transition: all .3s ease;
+		}
+		.slide-fade-leave-active {
+			transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+		}
+		/* 三次贝塞尔曲线（cubic-bezier） */
+		/* https://blog.csdn.net/zhaozjc112/article/details/52909172 */
+		/* 平面直角坐标系中从（0,0）到（1,1）之间的一条线，随着cubic-bezier(x1,y1,x2,y2)所表示两点而弯曲，图形的每一段时间的陡峭程度就代表着元素运动的快慢程度，（越陡峭运动的越快） */
+		.slide-fade-enter, .slide-fade-leave-to {
+			transform: translateX(10px);
+			opacity: 0;
+		}
+	</style>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<button @click='show = !show'>Toggle render</button>
+		<transition name='slide-fade'>
+			<p v-if='show'>hellow</p>
+		</transition>
+	</div>
+
+<!-- transition:属性名 运动时间 运动方式 运动前延迟; -->
+<!-- transition-timing-function:linear|ease|ease-in|ease-out|ease-in-out|cubic-bezie(,,,);*/
+			/*transition-timing-function:匀速运动|慢-快-慢|慢-快|快-慢|慢-快-慢|自定义值（0,1之间）; -->
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				show: true
+			}
+		})
+	</script>
+</body>
+</html>
