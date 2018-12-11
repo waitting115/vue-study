@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<style>
+		.flip-list-move {
+			transition: transform 1s;
+		}
+	</style>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<!-- <transition-group> 组件还有一个特殊之处。不仅可以进入和离开动画，还可以改变定位。要使用这个新功能只需了解新增的 v-move 特性，它会在元素的改变定位的过程中应用。像之前的类名一样，可以通过 name 属性来自定义前缀，也可以通过 move-class 属性手动设置。
+
+		v-move 对于设置过渡的切换时机和过渡曲线非常有用，你会看到如下的例子： -->
+
+		<button v-on:click="shuffle">Shuffle</button>
+  <transition-group name="flip-list" tag="ul">
+    <li v-for="item in items" v-bind:key="item">
+      {{ item }}
+    </li>
+  </transition-group>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				items: [1,2,3,4,5,6,7,8,9]
+				
+			},
+			methods: {
+				//先写一个可以打乱数组顺序的函数方法
+				shuffleArray: function (array) {
+			   	  for (var i = array.length - 1; i > 0; i--) {
+			        var j = Math.floor(Math.random() * (i + 1));
+			        var temp = array[i];
+			        array[i] = array[j];
+			        array[j] = temp;
+				    }
+				    return array;
+				},
+				//原理就是：从最后一个数组元素到第一个元素用变量i进行for循环，然后定义j为0~length之间的一个随机数，然后利用中间变量temp将两个元素交换位置，循环过后，数组的顺序也就随机打乱了。
+				shuffle: function () {
+					// this.items = this.$options.methods.shuffleArray(this.items);
+					// console.log(this.items);
+					Vue.set(this.items ,this.$options.methods.shuffleArray(this.items))
+				}
+			}
+			// 简单的来说，用户向监听器发起修改请求，监听器进行修改的同时，同时动态更新对应DOM的值。通过下标直接进行值的修改会绕开监听器，所以也就无法实现动态更新的效果了。
+			// Vue对于这个问题有对应的解决方案。方法很简单，引入Vue，然后使用Vue.set(dest,index,value)函数即可。
+			// PS:dest,需要修改的数组；index,数组下标；value,想要修改的值。
+			// 这里主要作用是给旧数组赋值并触发DOM更新
+		})
+		// var items = [1,2,3,4,5,6,7,8,9];
+		
+		// console.log(shuffleArray(items));
+	</script>
+</body>
+</html>
