@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<style>
+		.list-complete-item{
+			transition: all 1s;
+			display: inline-block;
+			margin-right: 10px;
+		}
+		.list-complete-enter, .list-complete-leave-to{
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		.list-complete-leave-active{
+			position: absolute;
+		}
+	</style>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue" class="demo">
+		<button @click='shuffle'>Shuffle</button>
+		<button @click='add'>Add</button>
+		<button @click='remove'>Remove</button>
+		<transition-group name='list-complete' tag='p'>
+			<span
+			 v-for='item in items'
+			 :key='item'
+			 class='list-complete-item'
+			>
+				{{ item }}
+			</span>
+		</transition-group>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				items: [1,2,3,4,5,6,7,8,9,0],
+				nextNum: 10
+			},
+			methods:{
+				//用原生的方法写一个打乱数组顺序的方法
+				shuffleArray: function (array) {
+					for(var i = array.length-1; i > 0; i --) {
+						var j = Math.floor(Math.random() * (i + 1));
+						var temp = array[i];
+						array[i] = array[j];
+						array[j] = temp;
+					}
+					return array;
+				},
+
+
+				//还是一样，先写一个产生固定范围的随机数的方法
+				//splice()---对数组添加、删除项目，然后返回被删除的项目。该方法会改变原数组。
+				//参数：
+					//index(必须)-规定添加、删除的位置；
+					//howmany(必须)-删除的数量，如果为0，则不会删除项目
+					//item1,...,itemX(可选)-向数组添加的新项目
+				randomIndex: function () {
+					return Math.floor(Math.random() * this.items.length)
+				},
+				add: function () {
+					this.items.splice(this.randomIndex(),0,this.nextNum++)
+				},
+				remove: function () {
+					this.items.splice(this.randomIndex(), 1)
+				},
+				shuffle: function () {
+					Vue.set(this.items,this.$options.methods.shuffleArray(this.items))
+				}
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
