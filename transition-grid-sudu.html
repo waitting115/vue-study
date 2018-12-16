@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<style>
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			width: 238px;
+			margin-top: 10px;
+		}
+		.cell {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 25px;
+			height: 25px;
+			border: 1px solid #aaa;
+			margin-right: -1px;
+			margin-bottom: -1px;
+		}
+		.cell: nth-child(3n) {
+			margin-right: 0;
+		}
+		.cell: nth-child(27n) {
+			margin-bottom: 0;
+		}
+		/*:nth-child(n)选择器匹配属于其父元素的第N个子元素，不论元素的类型。n可以使数字、关键词或公式
+			odd和event是可用于匹配下标是奇数或偶数的子元素的关键字（第一个子元素的下标是1）
+			使用公式（an + b）。表示周期的长度，n是计数器，b是偏移值
+				比如：p:nth-child(3n + 1)表示下标是3的倍数且加一的所有p元素*/
+
+		/*与之对应的还有 :nth-of-type(n)选择器匹配属于父元素的特定类型的第N个子元素的每个元素
+		用法和:nth-child(n)相同;*/
+		.cell-move {
+			transition: transform 1s;
+		}
+	</style>
+	<script src="js/lodash.min.js"></script>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue" class="demo">
+		<h1>Liuxiaomeng</h1>
+
+		<button @click='shuffle'>
+			Shuffle
+		</button>
+		<transition-group name='cell' tag = 'div' class='container'>
+			<div v-for='cell in cells' :key='cell.id' class='cell'>
+				{{ cell.number }}
+			</div>
+		</transition-group>
+	</div>
+
+	<script>
+		var arr = ['刘', '晓', '萌', '我', '喜', '欢', '你', '呀', '!'];
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				cells: Array.apply(null, { length: 81 })
+				.map(function (_, index) {
+					return {
+						id: index,
+						number: arr[index % 9]
+					}
+				})
+			},
+			methods:{
+				shuffle: function () {
+					this.cells = _.shuffle(this.cells)
+				}
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
