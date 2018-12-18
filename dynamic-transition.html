@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+	<script src="js/velocity.min.js"></script>
+</head>
+<body>
+	<div id="vue" class="demo">
+		Fade In: <input type='range' v-model='fadeInDuration' min='0' :max='maxFadeDuration'>
+		Fade Out: <input type="range" v-model='fadeOutDuration' min="0" :max="maxFadeDuration">
+		<transition
+		 :css="false"
+		 @before-enter="beforeEnter"
+		 @enter="enter"
+		 @leave="leave"
+		>
+			<p v-if="show">hello</p>
+		</transition>
+		<button
+		 v-if="stop"
+		 @click="stop = false; show = false"
+		>Start animating</button>
+		<button
+		 v-else
+		 @click="stop = true"
+		>Stop it!</button>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				show: true,
+				fadeInDuration: 1000,
+				fadeOutDuration: 1000,
+				maxFadeDuration: 1500,
+				stop: true
+			},
+			mounted: function () {
+				this.show = false
+			},
+			methods:{
+				beforeEnter: function (el) {
+					el.style.opacity = 0
+				},
+				enter: function (el, done) {
+					var vm = this
+					Velocity(el,
+						{ opacity: 1 },
+						{
+							duration: this.fadeInDuration,
+							complete: function () {
+								done()
+								if (!vm.stop) vm.show = false
+							}
+						}
+					)
+				},
+				leave: function (el, done) {
+					var vm = this
+					Velocity(el,
+						{ opacity:0 },
+						{
+							duration: this.fadeOutDuration,
+							complete: function () {
+								done()
+								vm.show =true
+							}
+						}
+					)
+				}
+			}
+		})
+	</script>
+</body>
+</html>
