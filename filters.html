@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue-filter</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		
+	</div>
+
+
+	<script>
+		//如果是全局的过滤器
+		Vue.filter('reverse', function(dataStr, SecondParameter, ThirdParameter) {
+			return SecondParameter + dataStr.split('').reverse().join('') + " " + ThirdParameter
+		})
+
+		var App = {
+			template:`<div>
+				<input type="text" v-model="name"/>
+				{{ name | reverse("英文版：", "aa") }}
+			</div>`,
+			data: function () {
+				return { name: '' }
+			}
+			// ,
+			// filters:{
+			// 	reverse: function (dataStr, SecondParameter, ThirdParameter) {
+			// 		return SecondParameter + dataStr.split('').reverse().join('') + " " + ThirdParameter
+			// 	}
+			// }
+		}
+
+		var vm = new Vue({
+			el:"#app",
+			
+			components:{
+				app: App
+			},
+			template:'<app/>'
+		})
+	</script>
+</body>
+</html>

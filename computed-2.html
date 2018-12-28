@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>computed</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		
+	</div>
+
+	<script>
+		var App = {
+			template:`
+				<div>(
+					<input type="text" v-model="num1"/>
+					+
+					<input type="text" v-model="num2"/>
+					) * 
+					<input type="text" v-model="num3"/>
+					= {{ result }}
+				</div>
+			`,
+			data: function () {
+				return {
+					num1:0,
+					num2:0,
+					num3:0
+				}
+			},
+			computed:{//可以缓存，数据不变不会重新渲染，有这个优化
+				result:function () {
+					//监视对象，写在了函数内部，凡是函数内部有this.相关属性，改变都会触发当前函数
+					console.log("监视到了");
+					return ((this.num1-0) + (this.num2-0)) * this.num3
+					//return + 是拼接，+ -是运算规则
+				}
+			}
+		}
+
+		new Vue({
+			el:"#app",
+			components:{
+				app: App
+			},
+			template: '<app/>'
+		})
+	</script>
+</body>
+</html>

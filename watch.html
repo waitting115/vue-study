@@ -2,55 +2,56 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Vue</title>
+	<title>Vue-watch</title>
 	<script src="js/vue.js"></script>
 </head>
 <body>
-	<div id="vue">
-		<p>
-			Ask a yes/no question:
-			<input type="text" v-model='question'>
-		</p>
-		<p>{{answer}}</p>
+	<div id="app">
+		
 	</div>
-<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-	<script>
 
-		var watchExampleVM = new Vue({
-			el:"#vue",
-			data:{
-				question: '',
-				answer:'I cannot give you an ansewe until you ask a question!'
-			},
-			watch: {
-				//如果question发生改变，这个函数就会执行
-				question: function (newQuestion, oldQuestion) {
-					this.answer = 'Waiting for yu to stop typing...'
-					this.devouncedGetAnswer()	//!!
+	<script>
+		var App = {
+			template: `
+				<div>
+					<input type="text" v-model="inputValue"/>
+					{{ inputValue }}
+
+					<button @click="arr[0].name = 'newName';">改变arr.name的值</button>
+				</div>
+			`,
+			data: function () {
+				return {
+					inputValue: '',
+					arr: [ {name: 'jack'} ]
 				}
 			},
-			//此处应用一个钩子函数，组件实例化完毕，但是页面还未显示
-			created: function () {
-				this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)	//!!
-			},
-			methods: {
-				getAnswer:function () {
-					if(this.question.indexOf('?') === -1 || this.question.indexOf('？') === -1) {
-						this.answer = 'Questions usually contain a question mark. :-)'
-						return //让程序在这停止
+			watch:{//watch用来监视一个个的单个属性值
+				inputValue: function (newValue, oldValue) {//监视简单数据类型
+					console.log(newValue, oldValue);
+					if(newValue == '我看见你了') {
+						alert("哟！这都被你发现了！")
 					}
-					this.answer = 'Thinking...'
-					var vm = this
-					axios.get('https://yesno.wtf.api')
-						.then(function (response) {
-							vm.answer = _.capitalize(respinse.data.answer)
-						})
-						.catch(function (error) {
-							vm.answer = 'Error!Could not reach the API.' + error
-						})
+				},
+				// arr: function (){
+				// 	console.log("改变了吗？")
+				// }//这个一定不会成功，监视复杂类型这种方法无法监视的原因是因为此方法监视的是对象地址，地址没改改的是属性的值
+				//深度监视：array|object
+				arr:{
+					deep:true,//深度
+					handler: function (newValue, oldValue) {
+						console.log("监视复杂数据类型成功！")
+					}
 				}
 			}
+		}
+
+		new Vue({
+			el:"#app",
+			components:{
+				app: App
+			},
+			template:'<app/>'
 		})
 	</script>
 </body>
