@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>routing-principle</title>
+</head>
+<body>
+	<a href="#/login">点我跳转登录界面</a>
+	<a href="#/reginster">点我跳转注册界面</a>
+
+	<div id="routing"></div>
+
+	<script>
+		var div = document.getElementById("routing");
+		// hashchange事件：url上的部分锚点数据（#xxx）改变可以获取到这个事件
+		window.addEventListener("hashchange", function () {
+			//根据不同的锚点值做出不同的显示
+			switch (location.hash) {
+				case '#/login' :
+					div.innerHTML = "<h1>登录界面</h1>";
+					break;
+				case '#/reginster' :
+					div.innerHTML = "<h1>注册界面</h1>"
+					break;
+			}
+		})
+
+		//hash即URL中#后面的部分，
+			// 使用浏览器访问页面时，如果网页URL中带有hash，页面就会定义到id活name与hash值一样的元素位置；
+			// hash还有另一个特点，他的改变不会导致页面的重新加载；
+			// hash值浏览器是不会随请求发送到服务器端的
+			// 通过window.location.hash属性获取和设置hash的值
+
+		// hashchange事件（IE8已支持此事件）
+			// 当URL片段发生更改时,将触发hashchange事件(跟在#符号后面的部分,包括#)
+			// hashchange触发时,事件对象会有hash改变前的URL值和改变后的URL值两个属性:
+				window.addEventListener("hashchange", function(e) {
+					console.log(e.oldURL);
+					console.log(e.newURL)
+				},false);
+	</script>
+</body>
+</html>
