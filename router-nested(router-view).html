@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue-$route</title>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		
+	</div>
+
+	<script>
+		var Login = {
+			template: `
+				<div>
+					我是登录界面
+					<router-link :to=" {name: 'stuLogin' }">学生登录</router-link>
+					<router-link :to=" {name: 'teaLogin' }">教师登录</router-link>
+					<router-view></router-view>
+				</div>
+			`
+		}
+
+		var Register = {
+			template: `
+				<div>我是注册界面</div>
+			`
+		}
+
+		var StuLogin = {
+			template: '<div>我是学生登录界面</div>'
+		}
+
+		var TeaLogin = {
+			template: '<div>我是教师登录界面</div>'
+		}
+		var App = {
+			template: `
+				<div>
+					<router-link :to=" { name: 'login', query: { id:1 } }">登录去</router-link>
+					<router-link :to=" { name: 'register', params: { name: 'abc' } }">注册去</router-link>
+					<router-view></router-view>
+				</div>
+			`
+		}
+
+		Vue.use(VueRouter);
+
+		var router = new VueRouter({
+			routes: [
+				{ name: 'login', path: '/login', component: Login ,
+					children: [
+						{ name: 'stuLogin', path: 'stuLogin', component: StuLogin },
+						{ name: 'teaLogin', path: 'teaLogin', component: TeaLogin }
+					]},
+				{ name: 'register', path: '/register/:name', component: Register }
+			]
+		})
+	
+
+		new Vue({
+			el:"#app",
+			router: router,
+			components: {
+				app: App
+			},
+			template: '<app/>'
+		})
+	</script>
+</body>
+</html>

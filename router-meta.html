@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue-$route</title>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		
+	</div>
+
+	<script>
+		var isLogin = false;//用来装载是否登录的变量
+		var Login = {
+			template: `
+				<div>
+					我是登录界面
+					<router-link :to=" {name: 'stuLogin' }">学生登录</router-link>
+					<router-link :to=" {name: 'teaLogin' }">教师登录</router-link>
+					<router-view></router-view>
+				</div>
+			`,
+			created: function () {
+				isLogin = true;//已经加载了登录，可以访问个人主页
+			}
+		}
+
+		var Register = {
+			template: `
+				<div>我是注册界面</div>
+			`
+		}
+
+		var StuLogin = {
+			template: '<div>我是学生登录界面</div>'
+		}
+
+		var TeaLogin = {
+			template: '<div>我是教师登录界面</div>'
+		}
+
+		var PersonalHomePage = {
+			template: '<div>我是个人主页</div>'
+		}
+		var App = {
+			template: `
+				<div>
+					<router-link :to=" { name: 'login', query: { id:1 } }">登录去</router-link>
+					<router-link :to=" { name: 'register', params: { name: 'abc' } }">注册去</router-link>
+					<router-link :to=" { name: 'personal-home-page' } ">个人主页</router-link>
+					<router-view></router-view>
+				</div>
+			`
+		}
+
+		Vue.use(VueRouter);
+
+		var router = new VueRouter();
+		//这样可以多次追加路由规则，动态的获取路由规则，并不是像之前那样一步写死，这样更为灵活，可以方便调用后追加路由规则
+		router.addRoutes([
+			//默认首页路由
+			// { path: '/', redirect: { name: 'register' }},
+			{ name: 'login', path: '/login', component: Login ,
+				children: [
+					{ name: 'stuLogin', path: 'stuLogin', component: StuLogin },
+					{ name: 'teaLogin', path: 'teaLogin', component: TeaLogin }
+				]},
+			{ name: 'register', path: '/register/:name', component: Register },
+			{ name: 'personal-home-page', path: '/PersonalHomePage',component: PersonalHomePage, meta: { isChecked: true } }//给未来路由权限控制，是全局路由守卫，来做参照条件  设置当前路由需要校验，不需要校验的路由就不需要写
+		]);
+
+		router.beforeEach( function (to, form, next) {
+			//console.log(to);//跳转的目标
+			//console.log(form);//从哪跳转
+			//next();//执行跳转，next()有三种情况 1、next()正常跳转 2、next(false)阻止跳转 3、next(xxx)条件跳转
+			if(!to.meta.isChecked) {//对路由进行验证
+				next();
+			}else{
+				if(isLogin) {
+					next();
+				}else{
+					alert("请先登录！");
+					next({ name: 'login' });
+				}
+			}
+		})
+	
+
+		new Vue({
+			el:"#app",
+			router: router,
+			components: {
+				app: App
+			},
+			template: '<app/>'
+		})
+	</script>
+</body>
+</html>
