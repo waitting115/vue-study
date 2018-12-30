@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+	<script src="js/TweenMax.min.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<input type="number" v-model.number="number" setp="20">
+		<p>{{ animatedNumber }}</p>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				number: 0,
+				tweenedNumber: 0
+			},
+			methods:{
+
+			},
+			computed:{
+				animatedNumber: function () {
+					return this.tweenedNumber.toFixed(0);
+					//tofixed(num)方法将数字保留指定小数位来进行四舍五入
+				}
+			},
+			watch: {
+				number: function (newValue) {
+					TweenLite.to(this.$data, 0.5, { tweenedNumber: newValue });
+				}
+			}//watch用来监测Vue实例上的数据变动，此处watch用来监测number数据的变动，如果有变化，就会调用后面的方法。
+		})
+	</script>
+</body>
+</html>
