@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<ul>
+			<li v-for="book in books">
+				书名：{{ book.name }}
+				作者：{{ book.author }}
+			</li>
+		</ul>
+		<ul>
+			<li v-for="booka in filterBook">
+				书名：{{ booka.name }}
+				作者：{{ booka.author }}
+			</li>
+		</ul>
+	</div>
+
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				books:[
+					{
+						name: "《Vue.js实战》",
+						author: "梁灏"
+					},
+					{
+						name: "《JavaScript权威指南》",
+						author:"ABC"
+					},
+					{
+						name: "《JavaScript高级程序设计》",	
+						author: "DEF"
+					}
+				]
+			},
+			methods:{
+
+			},
+			computed:{
+				filterBook: function () {
+					return this.books.filter(function (booka) {
+						return booka.name.match(/JavaScript/);
+					})
+				}
+			}
+		})
+	</script>
+</body>
+</html>

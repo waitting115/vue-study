@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<ul>
+			<li v-for="book in books">
+				书名：{{ book.name }}
+				作者：{{ book.author }}
+			</li>
+		</ul>
+		<ul>
+			<li v-for="booka in sortBook">
+				书名：{{ booka.name }}
+				作者：{{ booka.author }}
+			</li>
+		</ul>
+	</div>
+
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				books:[
+					{
+						name: "《Vue.js实战》",
+						author: "梁灏"
+					},
+					{
+						name: "《JavaScript权威指南》",
+						author:"ABC"
+					},
+					{
+						name: "《JavaScript高级程序设计》",	
+						author: "DEF"
+					}
+				]
+			},
+			methods:{
+
+			},
+			computed:{
+				sortBook: function () {
+					return this.books.sort( function (a, b) {
+						return b.name.length - a.name.length;
+						// (a, b) => {
+						//     // 数字
+						//     if (a.type > b.type) return -1;
+						//     if (a.type < b.type) return 1;
+						    
+						//     // 字母
+						//     if (a.name.length > b.name.length) return -1;
+						//     if (a.name.length < b.name.length) return 1;
+						    
+						//     // 汉字 - 或者其他情况
+						//     return b.xxx - a.xxx;
+						// }
+
+
+						// 而且，sort（）函数会改变原数组的。
+					})
+				}
+			}
+		})
+		console.log(vm.books);
+	</script>
+</body>
+</html>
