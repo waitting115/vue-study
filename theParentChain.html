@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>message: {{ message }}</p>
+		<my-component></my-component>
+	</div>
+
+	<script>
+		Vue.component('my-component', {
+			template:' <button @click="handleEvent">改变事件</button>',
+			methods: {
+				handleEvent: function () {
+					this.$parent.message = "子组件改变后的数据";
+				}
+			}
+		})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				message: "原始数据"
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

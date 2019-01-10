@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<component1>
+			<p>分发的内容</p>
+			<p>更多分发的内容</p>
+		</component1>
+	</div>
+
+	<script>
+	Vue.component("component1", {
+		template:`
+			<div>
+				<slot>
+					<p>如果没有内容分发进来，我将作为默认内容出现</p>
+				</slot>
+			</div>
+		`
+	})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+
+			},
+			methods:{
+
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>

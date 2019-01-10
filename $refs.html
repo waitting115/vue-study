@@ -2,51 +2,37 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Vue-$refs</title>
+	<title>Vue</title>
 	<script src="js/vue.js"></script>
 </head>
 <body>
-	<div id="app">
-		
+	<div id="vue">
+		<button @click="handleRef">通过ref获取子组件实例</button>
+		<my-component ref="comA"></my-component>
 	</div>
 
 	<script>
-		var App = {
-			template:`<div>
-				<input type="text" v-if="isShow" ref="input"/>
-			</div>`,
+		Vue.component("my-component", {
+			template:'<div>子组件</div>',
 			data: function () {
 				return {
-					isShow: false,
+					message: 'child-component-content'
+				}
+			}
+		})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
 
+			},
+			methods:{
+				handleRef: function () {
+					var msg = this.$refs.comA.message;
+					console.log(msg);
 				}
 			},
-			mounted: function () {
-				//装载数据之后
-				// 显示元素，并给获取焦点
-				this.isShow = true;//触发input元素的插入
+			computed:{
 
-				// 思考
-				this.isShow = false;
-				this.isShow = true;
-				//并不会每次都操作DOM，它会将代码全执行完得出一个结果然后操作一次DOM即可
-
-				//给input元素获取焦点
-				// this.$refs.input.focus();
-				//但是这样做并不能得到预期的结果
-
-				// 我们希望在Vue真正渲染DOM到页面以后才做的事
-				this.$nextTick( function () {
-					this.$refs.input.focus();
-				})
-			}
-		}
-
-		new Vue({
-			el:"#app",
-			template:'<app/>',
-			components:{
-				app: App
 			}
 		})
 	</script>
