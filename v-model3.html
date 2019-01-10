@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<p>total: {{ total }}</p>
+		<my-component
+		  v-model="total"></my-component>
+		<button @click="handleReduce">-1
+		</button>
+	</div>
+
+	<script>
+		Vue.component("my-component", {
+			props: [ 'value' ],
+			template:`
+				<input type="text" :value = "value" @input = "upDateValue"/>
+			`,
+			methods: {
+				upDateValue: function (event) {
+					this.$emit("input", event.target.value);
+				}
+			}
+		})
+		var vm = new Vue({
+			el:"#vue",
+			data:{
+				total: 0
+			},
+			methods:{
+				handleReduce: function () {
+					this.total --;
+				}
+			},
+			computed:{
+
+			}
+		})
+	</script>
+</body>
+</html>
