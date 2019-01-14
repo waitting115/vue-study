@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		{{ message }}
+		<my-component inline-template>
+			<div>
+				<h1>在父组件中定义子组件的模板</h1>
+				<p>{{ msg }}</p>
+				<p>{{ message }}</p>
+			</div>
+		</my-component>
+	</div>
+
+
+	<script>
+		Vue.component('my-component', {
+			data: function () {
+				return {
+					msg: '这是子组件的内容'
+				}
+			},
+			// props: {
+			// 	message: {
+			// 		type: String,
+			// 		default: '这是父组件的内容'
+			// 	}
+			// }
+		});
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				message:'这是父组件的内容'
+			}
+		})
+	</script>
+</body>
+</html>

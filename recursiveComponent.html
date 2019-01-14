@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<my-component :count = 1>
+		</my-component>
+	</div>
+
+
+	<script>
+		Vue.component('my-component', {
+			name:'my-component',
+			props:{
+				count: {
+					type: Number,
+					default: 1
+				}
+			},
+			template:`
+				<div class="child">
+					<my-component
+					  :count="count + 1"
+					  v-if="count < 3"
+					></my-component>
+					{{ count }}
+				</div>
+			`
+		})
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				
+			}
+		})
+	</script>
+</body>
+</html>

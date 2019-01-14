@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<input-number v-model="value" :max="10" :min="0"></input-number>
+	</div>
+
+
+	<script>
+		function isValueNumber (value) {
+			return (/(^-?[0-9]+\.{1}]d+$)|(^-?[1-9][0-9]*$)|(^-?0(1)$)/).test(value+'')
+		}
+
+		Vue.component("input-number", {
+			template:`
+				<div class="input-number">
+					<input 
+					  type="text"
+					  :value='currentValue'
+					  @change="handleChange" />
+					<button
+					  @click="handleDown"
+					  :disabled="currentValue <= min"
+					>-</button>
+					<button
+					  @click="handleUp"
+					  :disabled="currentValue >= max"
+					>+</button>
+				</div>
+			`,
+			methods: {
+				handleUp: function () {
+					if(this.currentValue >= this.max) return;
+					this.currentValue ++;
+				},
+				handleDown: function () {
+					if(this.currentValue <= this.min) return;
+					this.currentValue --;
+				},
+				handleChange: function () {
+					var val = event.target.value.trim();//trim()方法清除str两边的空格
+					var max = this.max;
+					var min = this.min;
+
+					if(isValueNumber(val)) {
+						val = Number(val);
+						this.currentValue = val;
+
+						if (val > max) {
+							this.currentvalue = max
+						}else if(val < min) {
+							this.currentvalue = min
+						}
+					}else{
+						event.target.value = this.currentValue;
+					}
+				},
+				updateValue: function (val) {
+					if(val > this.max) val = this.max;
+					if(val < this.min) val = this.min;
+					this.currentValue = val;
+				}
+			},
+			props:{
+				max: {
+					type: Number,
+					default: Infinity//无穷大
+				},
+				min: {
+					type: Number,
+					default:-Infinity
+				},
+				value: {
+					type: Number,
+					default: 0
+				}
+			},
+			//我们之前介绍过，Vue是单向数据流，所以无法从组件内部直接修改value和prop的值。解决办法也介绍过，就是给组件声明一个data，默认引用value值，然后在组件内部维护这个data。
+			data: function () {
+				return {
+					currentValue:this.value
+				}
+			},
+			watch: {
+				value: function (val) {
+					this.updateValue(val);
+				},//监听value，使当value改变时，比如v-model或者父组件中的value改变的时候，使currentValue也随着改变。
+				currentValue: function (val) {
+					this.$emit('input', val);
+					this.$emit('on-change', val);
+				}//当子组件的变量数值改变时，返回到父组件中，让父组件中的值也跟着变。触发时父组件执行第一参数的事件，并且接收一个新值
+			},
+			// methods: {
+			// 	updateValue: function (val) {
+			// 		if(val > this.max) val = this.max;
+			// 		if(val < min) val = this.min;
+			// 		this.currentValue = val;
+			// 	}
+			// },
+			mounted: function () {
+				this.updateValue(this.value);//初始化时候对value进行过滤
+			}
+		})
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				value: 5
+			}
+		})
+	</script>
+</body>
+</html>

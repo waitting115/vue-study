@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<component :is="currentView"></component>
+		<button @click="handleChangeView('A')">Go to the A</button>
+		<button @click="handleChangeView('B')">Go to the B</button>
+		<button @click="handleChangeView('C')">Go to the C</button>
+	</div>
+
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				currentView: "comA"	
+			},
+			components: {
+				comA: {
+					template:'<div>component-A</div>'
+				},
+				comB: {
+					template: '<div>component-B</div>'
+				},
+				comC: {
+					template: '<div>component-C</div>'
+				}
+			},
+			methods: {
+				handleChangeView: function (component) {
+					this.currentView = 'com' + component;
+				}
+			}
+		})
+	</script>
+</body>
+</html>
