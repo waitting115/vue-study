@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div class="main" v-clickoutside="handleClose">
+			<button @click="show= !show">点击显示下拉菜单</button>
+			<div class="dropdown" v-show="show">
+				<p>下拉框的内容，点击外面区域可以关闭</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		Vue.directive('clickoutside', {
+			bind: function (el, binding, vnode) {
+				function documentHandler (e) {
+					console.log("e=" + e);
+					console.log("e.target=" + e.target);
+					console.log("binding.expression=" + binding.expression == true);
+					console.log("binding.expression=" + binding.expression);
+					console.log("binding.value=" + binding.value);
+					if(el.contains(e.target)) {
+						return false;
+					}
+					if(binding.expression) {
+						binding.value(e);
+					}
+				}
+				// el._vueClickOUtSide_ = documentHandler;
+				document.addEventListener('click', documentHandler);
+			},
+			unbind: function (el, binding) {
+				document.removeEventListener('click', documentHandler);
+				delete documentHandler;
+			}
+		})
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				show: true
+			},
+			methods: {
+				handleClose: function () {//用来关闭菜单
+					this.show = false;
+				}
+			}
+		})
+	</script>
+</body>
+</html>
