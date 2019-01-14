@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div id="div" v-if="showDiv">这是一段文本</div>
+		<button @click="getText">获取div内容</button>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				showDiv: false
+			},
+			methods: {
+				getText: function () {
+					this.showDiv = true;
+					this.$xectTick(function () {
+						// 由于vue的核心思想是数据驱动DOM。 事实上，在执行this.showDiv = true; 的时候div还没有被创建出来，只掉下一个Vue事件循环时，才开始创建。$nextTick就是用来知道什么时候DOM更新完成的。
+						var text = document.getElementById("div").innerHTML;
+						console.log(text);
+					})
+				}
+			}
+		})
+	</script>
+</body>
+</html>
