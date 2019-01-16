@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<div v-birthday="birthday"></div>
+	</div>
+
+
+	<script>
+		var Time = {
+			getNowDate: function () {
+				var date = new Date();
+				console.log("now=" + date.getTime());
+				return date.getTime();
+			},
+			getTodayUnix:function () {
+				var date = new Date();
+				date.setHours(0);
+				date.setMinutes(0);
+				date.setSeconds(0);
+				date.setMilliseconds(0);
+
+				return date.getTime();
+			},
+			getFormatTime: function (timestamp) {
+				var now = this.getNowDate();
+				var today = this.getTodayUnix();
+				var timer = Math.floor((now - timestamp) / 1000 / (3600 * 24));
+				if(now == today){
+					timer ++;
+				}
+				var year = Math.floor(timer / 365);
+				var month = Math.floor((timer % 365) / 30);
+				var day = timer - year * 365 - month * 30;
+				var tip = '您已经出生' + timer + '天。' + '您已经' + year + '岁' + month + '个月' + day + '天。';
+
+				return tip;
+			}
+		};
+		Vue.directive('birthday', {
+			bind: function (el, binding) {
+				el.innerHTML = Time.getFormatTime(binding.value());
+			}
+		});
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+
+			},
+			methods: {
+				birthday:function () {
+					var date = new Date();
+					date.setFullYear(1999);
+					date.setMonth(11);
+					date.setDate(9);
+					date.setHours(0);
+					date.setMinutes(0);
+					date.setSeconds(0);
+					date.setMilliseconds(0);
+					console.log("timestamp=" + date.getTime());
+					return date.getTime();
+				}
+			}
+		})
+	</script>
+</body>
+</html>
