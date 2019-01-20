@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<questionnaire :questions="questions"  @submit='handleSubmit'></questionnaire>	
+		<!-- 父组件给子组件传值：首先在父组件用v-bind将值赋值给子组件，然后在子组件中用props接收所传值。		 -->
+	</div>
+
+	<script>
+		Vue.component('questionnaire', {
+			template: `
+				<div>
+					<div>{{ page +1 }} / {{ count }}</div>
+					<div v-for="(item, index) in questions">
+						<radioselect v-show="page === index" v-if="item.type == \'radio\'" :name="\'q\' + (index + \'\')" :title="item.title" :choices="item.choices" @pick="handledPick(arguments)"></radioselect>
+						<multiselect v-show="page === index" v-else-if="item.type == \'checkbox\'" :name="\'q\' + (index + \'\')" :title="item.title" :choices="item.choices" @pick="handledPick(arguments)"></multiselect>
+						<typetext v-show="page === index" v-else :name="\'q\' + (index + \'\')" :title="item.title"  @pick="handledPick(arguments)"></typetext>
+					</div>
+						<mybutton v-show="page == count -1" :banned="disabledSubmit" @click="handleSubmit">提交</mybutton>
+						<mybutton v-show="page > 0" @click="handledPrev" :banned="false">上一题</mybutton>
+						<mybutton v-show="page < count -1" :banned="disabledNext" @click="handledNext">下一题</mybutton>
+						<mybutton v-show="true" @click="handledReset" :banned="false">重置</mybutton>
+				</div>
+			`,
+			props: {
+				questions: {
+					type: Array,
+					default:function () {
+						return [];
+					}
+				}
+			},
+			data: function () {
+				return {
+					page: 0,
+					//用来确定两个按钮是否是禁用状态
+					disabledSubmit: true,
+					disabledNext: true
+				}
+			},
+			computed: {
+				count: function () {
+					return this.questions.length;
+					//需要计算，所以不能直接data返回数据。
+				}
+			},
+			mounted: function () {},
+			methods: {
+				handleSubmit: function () {
+					this.$emit('submit', this.questions)
+					//提交事件上传到父组件，并且将用户填写完的questions
+				},
+				//上一步按钮函数
+				handledPrev: function () {
+					if(this.page > 0) {
+						this.page --;
+						this.updateDisableNext();
+					}
+				},
+				//下一步按钮函数
+				handledNext: function () {
+					if(this.page < this.count - 1) {
+						this.page ++;
+						this.updateDisableNext();
+					}
+				},
+				//重置按钮函数
+				handledReset: function () {
+					question = this.questions[this.page];//表示当前页面的问题对象
+					switch(question.type) {//判断问题对象的名字来分类并且做不同处理
+						case 'radio':
+							this.$children[this.page].curValue = '';//此处this依然指向questionnaire组件，这句就是指当前组件的第n个子组件的用户所填写的内容
+							break;
+						case 'checkbox':	
+							this.$children[this.page].curValue = [];
+							break;
+						case 'text' :
+							this.$children[this.page].value = '';
+							break;
+						default:
+					}
+				},
+				//子组件把自己的组件内用户输入的数据上传到父组件，然后用这个函数接收，此函数的参数就是上传上来的数据,把上传上来的数据赋值给最外面Vue对象里面date里面的保存用户选择变量
+				handledPick: function (arguments) {
+					question = this.questions[this.page];
+					console.log(arguments);
+					switch(question.type) {
+						case 'radio':
+						case 'checkbox': 
+							this.questions[this.page].picked = arguments[0];
+							console.log(arguments[0]);
+							break;
+						case 'text':
+							this.questions[this.page].text = arguments[0];
+							break;
+						default:
+					}
+					this.updateDisableNext();
+					this.updateDisableSubmit();
+				},
+				//此函数用来判断当前的页面用户填写的是否合格，首先判断是哪一页，然后判断当前页面填写的是否合格，然后控制变量的true、false
+				updateDisableNext: function () {
+					var flag = false;
+					var item = this.questions[this.page];
+					if(item.type == 'radio') {
+						if(item.picked == '') {
+							flag = true
+						}
+					} else if(item.type == 'checkbox') {
+						if(item.picked.length < 2) {
+							flag = true
+						}
+					} else {
+						if(item.text.length < 10) {
+							flag = true
+						}
+					}
+					this.disabledNext = flag;
+				},
+				//判断三个页面是否都填写规范，控制提交按钮变量的true、false
+				updateDisableSubmit: function () {
+					var flag = false;
+					this.questions.forEach(function (item) {
+						if(item.type === 'radio') {
+							if(item.picked === '') {
+								flag = true
+							}
+						} else if(item.type === 'checkbox') {
+							if(item.picked.length < 2) {
+								flag = true
+							}
+						} else {
+							if(item.text.length < 10) {
+								flag = true
+							}
+						}
+					});
+					this.disabledSubmit = flag;
+				}
+			}
+		})
+		//第一页组件
+		Vue.component('radioselect', {
+			name:'radioselect',//
+			template:`
+				<div>
+					<span>{{ title }}</span>
+					<div v-for="(item, index) in choices">
+						<input type="radio" v-model="curValue" :value="item" :id="values[index]"/>
+						<label :for="values[index]">{{ item }}</label>
+					</div>
+				</div>
+			`,
+			props: {
+				name: {
+					type: String,
+					defalut:'question0'
+				},
+				title: {
+					type: String,
+					default: 'Question'
+				},
+				choices:{
+					type: Array,
+					defalut:function () {
+						return ['a1', 'a2', 'a3']
+					}
+				}
+			},
+			data: function () {
+				var _this = this;
+				var values = [];
+				this.choices.forEach(function (item, index) {
+					values.push(_this.name + (index + ''));
+				});
+				return {
+					values: values,//用来给每一个radio按钮都加一个不一样的id，从而绑定label
+					curValue: ''//用来存v-model的值，从而返到父组件
+				}
+			},
+			watch: {
+				curValue: function (val) {
+					this.$emit('pick', val)
+					// console.log(val);
+				}
+			}
+		})
+		//第二页组件
+		Vue.component('multiselect', {
+			name: 'multiselect',
+			template:`
+				<div>
+					<span>{{ title }}</span>
+					<div v-for="(item, index) in choices">
+						<input type="checkbox" v-model="curValue" :value="item" :id="values[index]"/>
+						<label :for="values[index]"> {{ item }}</label>
+					</div>
+				</div>
+			`,
+			props: {
+				name: {
+					type:String,
+					default:'question0'
+				},
+				title: {
+					type: String,
+					default: 'Question'
+				},
+				choices: {
+					type: Array,
+					default: function () {
+						['a1', 'a2', 'a3']
+					}
+				}
+			},
+			data: function () {
+				var _this = this;
+				var values = [];
+				this.choices.forEach(function (item, index) {
+					values.push(_this.name + (index + ''))
+				});
+				return {
+					values: values,
+					curValue: []//要用数组保存用户所选，因为是多选
+				}
+			},
+			watch:{
+				curValue: {
+					handler: function (val) {
+						// 代表在wacth里声明了curValue这个方法之后立即先去执行handler方法
+						this.$emit('pick', val);
+						// console.log(val);
+					},
+					deep: true
+				}
+			}
+		})
+		//第三个组件
+		Vue.component('typetext', {
+			name: 'typetext',
+			props:{
+				name: {
+					type: String,
+					default:'question0'
+				},
+				title: {
+					type: String,
+					default:'Question'
+				},
+				text: {
+					type: String,
+					default: ''
+				}
+			},
+			data: function () {
+				return {
+					value: this.text
+				}
+			},
+			template: `
+				<div>
+					<span>{{ this.title }}</span>
+					<div>
+						<textarea  v-model="value"></textarea>
+					</div>
+				</div>
+			`,
+			watch: {
+				value: function (val) {
+					this.$emit('pick', val)
+				}
+			}
+		});
+
+		Vue.component('mybutton', {
+			props: {
+				fontcolor: {
+					type:String,
+					default: "#000"
+				},
+				banned: {
+					type: Boolean,
+					default: true
+				}
+			},
+			template:`
+				<div>
+					<button class="mybutton" @click="handleClick" :disabled="banned"><slot></slot></button>
+				</div>
+			`,
+			methods: {
+				getStyle: function () {
+					return {
+						color: this.fontcolor,
+						":active color": "#fff"
+					}
+				},
+				handleClick: function () {
+					this.$emit('click');
+				}
+			}
+		});
+
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				questions: [
+					{
+						type: 'radio',
+						title: '1.请问您的性别是：',
+						choices: ['男', '女', '保密'],
+						picked: ''
+					},
+					{
+						type: 'checkbox',
+						title: '2.请选择您的兴趣爱好：',
+						choices: ['看书', '游泳', '跑步', '看电影', '听音乐'],
+						picked: []
+					},
+					{
+						type: 'text',
+						title: '3.请介绍一下自己：',
+						text: ''
+					}
+				]
+			},
+			methods: {//提交函数
+				handleSubmit: function (e) {
+					//此处的e，就是子组件里面用户都填完后的questions数组，在里面就可以拿出来用户填写的信息
+					console.log('e=' + e);
+					var text = '';
+					text += '你是' + e[0].picked + '的\n';
+					text += '你喜欢' + e[1].picked.join('和') + "\n";
+					text += '你说' + e[2].text + '\n';
+
+					alert(text);
+				}
+			}
+		})
+	</script>
+</body>
+</html>
