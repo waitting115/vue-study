@@ -1,0 +1,51 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			<ele :list = 'list'></ele>
+			<button @click="handleClick">显示列表</button>
+		</div>
+
+		<script>
+			Vue.component('ele', {
+				props: {
+					list: {
+						type: Array,
+						default: function () {
+							return [];
+						}
+					}
+				},
+				render: function (creatElement) {
+					if(this.list.length) {
+						return creatElement('ul', this.list.map(function (item) {
+							return creatElement('li', item);
+						}))
+					} else {
+						return creatElement('p', '列表为空');
+					}
+				}
+			})
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					list: []
+				},
+				methods: {
+					handleClick: function () {
+						this.list = [
+							'Vue.js实战',
+							'JavaScript高级程序设计',
+							'JavaScript语言精粹'
+						]
+					}
+				}
+			})
+		</script>
+	</body>
+	</html>

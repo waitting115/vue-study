@@ -1,0 +1,60 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			<ele :show="show"></ele>
+			<button @click="show = !show">切换 show</button>
+
+			<ala :list="list"></ala>
+		</div>
+
+		<script>
+			Vue.component('ele', {
+				render: function (createElement) {
+					if(this.show) {
+						return createElement('p', 'show的值为true')
+					} else {
+						return createElement('p', 'show的值为false')
+					}
+				},
+				props: {
+					show: {
+						type: Boolean,
+						default: 'false'
+					}
+				}
+			})
+
+			Vue.component('ala', {
+				render: function (createElement) {
+					var nodes = [];
+					for (var i = this.list.length - 1; i >= 0; i--) {
+						nodes.push(createElement('p', this.list[i]))
+					}
+					return createElement('div', nodes);
+				},
+				props: {
+					list: {
+						type: Array
+					}
+				}
+			})
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					show: true,
+					list: [
+						'Vue.js实战',
+						'JavaScript高级程序设计',
+						'JavaScript语言精粹'
+					]
+				}
+			})
+		</script>
+	</body>
+	</html>

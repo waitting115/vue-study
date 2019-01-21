@@ -1,0 +1,125 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			<ele></ele>
+		</div>
+		<!-- 所有的组件树中，如果VNode是组建或含有组件的slot，那么VNode必须唯一。 -->
+
+		<script>
+			// 示例1：重复使用组件：
+			var Child = {
+				render: function (creatElement) {
+					return creatElement ('p', 'text')
+				}
+			};
+			Vue.component('ele', {
+				render: function (creatElement) {
+					//创建一个子节点，使用组件Child
+					var ChildNode = creatElement(Child);
+					return creatElement (
+						'div',
+						[
+							ChildNode,
+							ChildNode
+						]
+					)
+				}
+			});
+			//示例2：重复使用含有组件的slot，代码如下
+			Vue.component('Child', {
+				render: function (creatElement) {
+					return creatElement('p', 'text')
+				}
+			});
+			Vue.component('ele', {
+				render: function (creatElement) {
+					return creatElement('div', [
+							this.$slots.defalut,
+							this.$slots.defalut
+						])
+				}
+			});
+			// 这两种情况下，VNode受到了约束
+			// 对于重复渲染多个组件的方法有很多，比如下面的例子：
+			var Child = {
+				render: function (creatElement) {
+					return creatElement('p', 'text')
+				}
+			};
+			Vue.component('ele', {
+				render: function (creatElement) {
+					return creatElement ('div', 
+						Array.apply(null, {
+							length: 5
+						}),map(function () {
+							return creatElement(Child);
+						})
+					)
+				}
+			})
+
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					
+				}
+			})
+		</script>
+		<!-- 上例通过一个循环和工厂函数就可以渲染5个重复的子组件Child。对于含有组件的slot，复用就要稍微复杂一点了，需要将slot的每个子节点都克隆一份 -->
+		<div id="div">
+			<ele>
+				<div>
+					<Child></Child>
+				</div>
+			</ele>
+		</div>
+		<script>
+			//全局注册组件
+			Vue.component('Child', {
+				render: function (creatElement) {
+					return creatElement('p','text')
+				}
+			});
+			Vue.component('ele', {
+				render: function (creatElement) {
+					//克隆slot节点的方法
+					function cloneVNode (vnode) {
+						//递归遍历所有子节点，并克隆
+						const clonedChildren = vnode.children && vnode.children.map(function (vnode) {
+							return cloneVNode(vnode);
+						});
+						const cloned = creatElement(
+							vnode.tag,
+							vnode.data,
+							clonedChildren
+						);
+						// 对一些重要的属性也进行复制
+						cloned.text = vnode.text;
+						cloned.isComment = vnode.isComment;
+						cloned.componentOptions = vnode.componentOptions;
+						cloned.elm = vnode.elm;
+						cloned.context = vnode.context;
+						cloned.ns = vnode.ns;
+						cloned.isStatic = vnode.isStatic;
+						cloned.key = vnode.key;
+
+						return cloned;
+					}
+					const vNodes = this.$slots.default;
+					const clonedVNodes = vNodes.map(function (vnodes) {
+						return cloneVNode(vnodes);
+					});
+				}
+			})
+			var app = new Vue({
+				el: '#app'
+			})
+		</script>
+	</body>
+	</html>

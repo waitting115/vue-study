@@ -1,0 +1,72 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			<ele></ele>
+			<ala></ala>
+		</div>
+
+		<script>
+			Vue.component('ele', {
+				template:`
+					<div id="element"
+					  ：class="{show: show}"
+					  @click="handledClick"
+					>文本内容</div>
+				`,
+				data: function () {
+					return {
+						show: true
+					}
+				},
+				methods:{
+					handledClick: function () {
+						console.log('clicked!');
+					}
+				} 
+			});
+			// 用render函数改写后的代码
+			Vue.component('ala', {
+				render: function (creatElement) {
+					return creatElement (
+						'div',
+						{
+							class: {
+								'show': this.show
+							},
+							attrs: {
+								id: 'elements'
+							},
+							on: {
+								click: this.handledClicka
+							}
+						},
+						'文本内容'
+					)
+				},
+				data () {
+					return {
+						show: true
+					}
+				},
+				methods: {
+					handledClicka: function () {
+						console.log('clicked!')
+					}
+				}
+			});
+
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					
+				}
+			})
+		</script>
+	</body>
+	</html>

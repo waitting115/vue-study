@@ -1,0 +1,46 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			<ele></ele>
+		</div>
+		<!-- 事实上，v-model就是prop: value和event: input组合使用的一个语法糖 -->
+
+		<script>
+			Vue.component('ele', {
+				render: function (createElement) {
+					var _this = this;
+					return createElement('div', [
+						createElement('input', {
+							domProps: {
+								value: this.value
+							},
+							on: {
+								input: function (event) {
+									_this.value = event.target.value;
+								}
+							}
+						}),
+						createElement('p', 'value=' + this.value)
+					])
+				},
+				data: function () {
+					return {
+						value: ''
+					}
+				}
+			})
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					
+				}
+			})
+		</script>
+	</body>
+	</html>
