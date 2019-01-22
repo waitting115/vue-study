@@ -1,0 +1,73 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue">
+			
+		</div>
+		<!-- 此代码无法直接运行，需要在webpack中配置插件bable-plugin-transform-vue.jsx编译后才可以 -->
+
+		<script>
+			render(createElement) {
+				return createElement('div', {
+					props: {//组件的props
+						text: 'some text'
+					},
+					attrs: {//正常的HTML属性
+						id: 'myDiv'
+					},
+					domProps: {//DOM属性
+						innerHTML: 'content'
+					},
+					on: {//自定义事件（不支持监听器，需要手动配置keyCode
+						change: this.clickHandler
+					},
+					nativeOn: {//仅对于组件，用于监听原生事件，而非自定义事件
+						click: this.clickHandler
+					},
+					class: {
+						show: true,
+						on: false
+					},
+					style: {
+						color: '#fff',
+						background: '#f45'
+					},
+					key: 'key',
+					ref: 'element',
+					refInFor: true,
+					slot: 'slot'
+				})
+			}
+			//上面的示例使用JSX后等同于下面的代码
+			render (h) {
+				return (
+					<div
+					  id="myDiv"
+					  domPropsInnerHTML="content"
+					  onChange={this.clickHandler}
+					  nativeOnClick={this.clickHandler}
+					  class={{show: true, on: false}}
+					  style={{ color: '#fff', background: '#f45'}}
+					  key="key"
+					  ref="element"
+					  refInFor
+					  slot="slot">
+					</div>
+				)
+			};
+
+			
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					
+				}
+			})
+		</script>
+	</body>
+	</html>

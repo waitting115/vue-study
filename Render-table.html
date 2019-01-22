@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		<v-table :columns='columns' :data='data'></v-table>
+		<button @click="handleAddData">添加数据</button>
+	</div>
+
+
+	<script>
+		Vue.component('v-table', {
+			props: {
+				columns: {//每一列的信息
+					type: Array,
+					default: function () {
+						return []
+					}
+				},
+				data: {//每一行的数据
+					type: Array,
+					defalut: function () {
+						return []
+					}
+				}
+			},
+			data: function () {
+				return {
+					//为了让排序后的数组不影响原数组
+					currentColumns: [],
+					currentData: []
+				}
+			},
+			render: function (h) {
+				var ths = [];//表头
+				var trs = [];//主体  二维数组
+				var _this = this;
+
+				//表格主体trs的数据传入
+				this.currentData.forEach( function (row) {
+					var tds = [];
+					_this.currentColumns.forEach( function (cell) {
+						tds.push(h('td', row[cell.key]));
+					});
+					trs.push(h('tr',tds))
+				});
+
+				//表格头部ths的数据传入
+				this.currentColumns.forEach( function ( col, index) {
+					if( col.sortable ) {//需要排序的列
+						ths.push(h('th', [
+							h('span', col.title),
+							//升序
+							h('a', {
+								class: {
+									on: col._sortType === 'asc'
+								},
+								on: {
+									click: function () {
+										_this.handleSortByAsc(index)
+									}
+								}
+							}, '↑'),
+							//降序
+							h('a', {
+								class: {
+									on: col._sortType === 'desc'
+								},
+								on: {
+									click: function () {
+										_this.handleSortByDesc(index)
+									}
+								}
+							},'↓')
+						]));
+					} else {
+						ths.push(h('th', col.title));
+					}
+				})
+
+				return h('table',[
+					h('thead', [
+						h('tr',ths)
+					]),
+					h('tbody', trs)
+				])
+			},
+			methods: {
+				makeColumns: function () {
+					//map()方法是要有返回值的，因为它并不改变原数组，而是返回一个操作过后的新数组
+					this.currentColumns = this.columns.map(function (item, index) {
+						//添加一个字段标识当前列排序的状态，后续使用
+						item._sortType = 'normal';
+						//添加一个字段标识当前列在数组中的索引，后续使用
+						item._index = index;
+						return item;
+					})
+				},
+				makeData: function () {
+					this.currentData = this.data.map( function (item, index) {
+						//添加一个字段标识当前列在数组中的索引，后续使用
+						item._index = index;
+						return item;
+					})
+				},
+				//升序函数
+				handleSortByAsc: function (index) {
+					var key = this.currentColumns[index].key;
+					this.currentColumns.forEach( function (col) {
+						col._sortType = 'normal'
+					});
+					this.currentColumns[index]._sortType = 'asc';
+
+					this.currentData.sort(function (a, b) {
+						return a[key] > b[key] ? 1 : -1;
+					})
+				},
+				//降序函数
+				handleSortByDesc: function (index) {
+					var key = this.currentColumns[index].key;
+					this.currentColumns.forEach(function (col) {
+						col._sortType = 'normal'
+					});
+					this.currentColumns[index]._sortType = 'desc';
+
+					this.currentData.sort(function (a, b) {
+						return a[key] < b[key] ? 1 : -1;
+					})
+				}
+			},
+			watch: {
+				data: function () {
+					this.makeData();
+					var sortedColumn = this.currentColumns.filter( function (col) {
+						return col._sortType !== 'normal'
+					});
+
+					if (sortedColumn[0] > 0) {
+						if( sortedColumn[0]._sortType == 'asc') {
+							this.handleSortByAsc(sortedColumn[0]._index);
+						} else {
+							this.handleSortByDesc(sortedColumn[0]._index);
+						}
+					}
+				}
+			},
+			mounted: function () {
+				//组件初始化时调用
+				this.makeData();
+				this.makeColumns();
+			}
+		})
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				columns: [
+					{
+						title: '姓名',
+						key: 'name'
+					},
+					{
+						title: '年龄',
+						key: 'age',
+						sortable: true//说明该列需要排序
+					},
+					{
+						title: '出生日期',
+						key: 'birthday',
+						sortable: true
+					},
+					{
+						title: '地址',
+						key: 'address'
+					}
+				],
+				data: [
+					{
+						name: '王小明',
+						age: 18,
+						birthday: '1999-02-21',
+						address: '北京市朝阳区芍药居'
+					},
+					{
+						name: '张小刚',
+						age: 25,
+						birthday: '1992-01-23',
+						address: '北京市海淀区西二旗'
+					},
+					{
+						name: '陈小春',
+						age: 30,
+						birthday: '1985-11-12',
+						address: '深圳市南山区深南大道'
+					},
+					{
+						name: '周小伟',
+						age: 33,
+						birthday: '1990-04-23',
+						address: '上海市浦东新区世纪大道'
+					}
+				]
+			},
+			methods: {
+				handleAddData: function () {
+					this.data.push({
+						name: '刘小天',
+						age: 12,
+						birthday: '2001-05-16',
+						address: '北京市东城区东直门'
+					})
+				}
+			}
+		})
+	</script>
+</body>
+</html>
