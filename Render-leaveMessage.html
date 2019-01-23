@@ -1,0 +1,186 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue</title>
+		<style>
+			[v-clock] {
+				display: none;
+			}
+		</style>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="vue"  style="width: 500px; margin: 0 auto">
+			<div class="message">
+				<v-input v-model="username"></v-input>
+				<v-textarea v-model="message" ref="message"></v-textarea>
+				<button @click="handleSend">发布</button>
+			</div>
+			<list @reply="handleReply" :list="list"></list>
+		</div>
+
+
+		<script>
+			Vue.component('vInput', {
+				props: {
+					value: {//
+						teye: [String, Number],
+						default: ''
+					}
+				},
+				render: function (h) {
+					var _this = this;
+					return h('div',[
+						h('span', '昵称：'),
+						h('input', {
+							attrs: {
+								type: 'text'
+							},
+							domProps: {
+								value: this.value
+							},
+							on: {
+								input: function (e) {
+									_this.value = e.target.value;
+									_this.$emit('input',e.target.value)
+								}
+							}
+						})
+					])
+				}
+			});
+
+			Vue.component('vTextarea', {
+				props: {
+					value: {
+						type: String,
+						default: ''
+					}
+				},
+				render: function (h) {
+					var _this = this;
+					return h('div', [
+						h('span', '留言内容：'),
+						h('textarea', {
+							attrs: {
+								placeholder: '请输入留言内容'
+							},
+							domProps: {
+								value: this.value
+							},
+							on: {
+								input: function (e) {
+									_this.value = e.target.value;
+									_this.$emit('input',e.target.value);
+								}
+							}
+						})
+					])
+				},
+				methods: {
+					focus: function () {
+						this.$refs.message.focus();
+					}
+				}
+			});
+
+			Vue.component('list', {
+				props: {
+					list: {
+						type: Array,
+						default: function () {
+							return [];
+						}
+					}
+				},
+				render: function (h) {
+					var _this = this;
+					var list = [];//用来装node对象，也就是所有的留言条
+					console.log(this.list);
+
+					this.list.forEach(function (item, index) {
+						var node = h('div', {//将留言对象转化为节点，然后装到list里面一起渲染
+							attrs: {
+								class: 'list-item'
+							}
+						}, [
+							h('span', item.name + '：'),
+							h('div', {
+								attrs: {
+									class: 'list-msg'
+								}
+							}, [
+								h('p', item.message),
+								h('a', {
+									attrs: {
+										class: 'list-reply'
+									},
+									on: {
+										click: function () {
+											_this.handleReply(index);//回复功能
+										}
+									}
+								}, '回复')
+							])
+						]);
+						list.push(node);
+					});
+
+					if(this.list.length) {
+						return h('div', {
+							attrs: {
+								class: 'list'
+							}
+						} ,list);
+					} else {
+						return h('div', {
+							attrs: {
+								class: 'list-nothing'
+							}
+						}, '留言列表为空')
+					}
+				},
+				methods: {
+					//回复功能
+					handleReply : function (index) {
+						this.$emit('reply', index);//将父组件中的事件名和第几个留言条需要回复的索引上传到父组件
+					}
+				}
+
+			})
+			var vm = new Vue({
+				el: '#vue',
+				data: {
+					username: '',
+					message: '',
+					list: []		
+				},
+				methods: {
+					handleSend: function () {
+						if(this.username === '') {
+							window.alert('请输入昵称');
+							return;
+						}
+						if(this.message === '') {
+							window.alert('请输入留言内容');
+							this.$refs.message.focus();
+							return;
+						}
+						this.list.push({
+							name: this.username,
+							message: this.message
+						});
+						this.message = '';
+					},
+					handleReply: function (index) {
+						var name = this.list[index].name;
+						this.message = '回复@' + name + ': ';
+						console.log('this.$refs.message= ' + this.$refs.message);
+						this.$refs.message.focus();//获得焦点
+					}
+				}
+			})
+		</script>
+	</body>
+	</html>
