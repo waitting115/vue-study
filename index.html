@@ -2,51 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Vue</title>
-	<script src="js/vue.js"></script>
+	<title>webpack App</title>
 </head>
 <body>
-	<div id="vue">
-		<span v-bind:title = "message">
-			鼠标悬停几秒钟查看此处动态绑定的提示信息！
-		</span>
-
-		<ol>
-			<li v-for='todo in todos'>
-				{{todo.test}}
-			</li>
-		</ol>
-
-		<p>{{messages}}</p>
-		<button v-on:click='reverseMessage'>逆转消息</button>
-
-		<p>{{index}}</p>
-		<input type="text" v-model='index'>
+	<div id="app">
+		Hello World.
 	</div>
-
-	<script>
-		var app = new Vue({
-			el:"#vue",
-			data:{
-				index: 'Hello Vue',
-				message:'页面加载于' + new Date().toLocaleString(),
-				todos:[
-					{test:'学习JavaScript'},
-					{test:'学习Vue'},
-					{test:'做项目'}
-				],
-				messages:'Hello Vue.js!'
-			},
-			methods:{
-				reverseMessage: function () {
-					this.messages = this.messages.split('').reverse().join('')
-					//split()是将字符串按照指定符号分割成一个数组，reverse()是将数组元素顺序逆反，join()是将数组按照指定符号连接成字符串。
-				}
-			},
-			computed:{
-
-			}
-		})
-	</script>
+	<script type="text/javascript" src="/dist/main.js"></script>
 </body>
 </html>
