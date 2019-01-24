@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="vue">
+		
+	</div>
+
+
+	<script>
+		//config.js
+		var Config = {
+			version: '1.0.0'
+		};
+		export { Config };
+		//or
+		//config.js
+		export var Config = {
+			version: '1.0.0'
+		};
+		//其他类型也可以导出，比如导出一个函数
+		//add.js
+		export function add(a, b) {
+			return a + b;
+		}
+
+		//模块导出后，在需要使用的文件中用import导入，就可以使用了
+		//main.js
+		import { Config } from './config.js';
+		import { add } from './add.js'
+		console.log(Config.version);
+		console.log(add(1, 4));
+
+		//如果用户并不想了解导入的名称是什么，就可以用ecport default来输出默认的模块
+		//config.js
+		export default {
+			version: '1.0.0'
+		};
+
+		//add.js
+		export default function (a, b) {
+			return a + b;
+		};
+
+		//main.js
+		import conf from './config.js';
+		import Add from './add.js';
+
+		//如果使用npm安装了一些库，在webpack中可以直接导入
+		import Vue from 'vue';
+		import $ from 'jquery';
+		//上例分别导入了vue和jQuery库，并且命名为Vue和$
+		
+		var vm = new Vue({
+			el: '#vue',
+			data: {
+				
+			}
+		})
+	</script>
+</body>
+</html>
